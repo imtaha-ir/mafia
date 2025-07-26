@@ -3,7 +3,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export default function HowToPlayPage() {
   return (
-    <div style={{ padding: "16px", direction: "rtl" }}>
+    <div>
       {/* -------------------- Title -------------------- */}
       <Box boxShadow={1} p={2} mb={2}>
         <Typography variant="h5" textAlign="center">
