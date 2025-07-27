@@ -1,19 +1,17 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Card, Typography } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export default function HowToPlayPage() {
   return (
-    <div>
-      {/* -------------------- Title -------------------- */}
-      <Box boxShadow={1} p={2} mb={2}>
-        <Typography variant="h5" textAlign="center">
-          🎮 راهنمای بازی
+    <>
+      <Card>
+        <Typography variant="h4" textAlign="center">
+          راهنمای بازی
         </Typography>
-      </Box>
+      </Card>
 
-      {/* --------------------  About game (what is the Mafia?)  -------------------- */}
-      <Box boxShadow={1} p={2} mb={2}>
-        <Typography variant="h6">❓مافیا چیه؟</Typography>
+      <Card>
+        <Typography variant="h5">مافیا چیه؟</Typography>
         <Typography variant="subtitle1">
           مافیا یک بازی گروهیه که بین دو تیم اصلی انجام می‌شه:
           <br />- <strong>شهروندها</strong>
@@ -21,24 +19,22 @@ export default function HowToPlayPage() {
           <br />
           هدف هر تیم اینه که تیم مقابل رو کامل حذف کنه. بازی توی شب و روز به‌صورت نوبتی انجام می‌شه.
         </Typography>
-      </Box>
+      </Card>
 
-      {/* --------------------  Game target -------------------- */}
-      <Box boxShadow={1} p={2} mb={2}>
-        <Typography variant="h6">🎯 هدف بازی</Typography>
+      <Card>
+        <Typography variant="h5">هدف بازی</Typography>
         <Typography variant="subtitle1">
           - شهروندها وقتی برنده می‌شن که تمام مافیاها حذف بشن.
           <br />- مافیا زمانی برنده می‌شه که تعدادشون با شهروندهای زنده برابر بشه.
         </Typography>
-      </Box>
+      </Card>
 
-      {/* -------------------- Day and night cycle -------------------- */}
-      <Box boxShadow={1} p={2} mb={2}>
-        <Typography variant="h6">🔄 روند بازی (چرخه روز و شب)</Typography>
+      <Card>
+        <Typography variant="h5">روند بازی (چرخه روز و شب)</Typography>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography>
-              <strong>🌙 شب</strong>
+              <strong>شب</strong>
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -54,7 +50,7 @@ export default function HowToPlayPage() {
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography>
-              <strong>☀️ روز</strong>
+              <strong>روز</strong>
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -66,11 +62,10 @@ export default function HowToPlayPage() {
             </Typography>
           </AccordionDetails>
         </Accordion>
-      </Box>
+      </Card>
 
-      {/* -------------------- voting  -------------------- */}
-      <Box boxShadow={1} p={2} mb={2}>
-        <Typography variant="h6">🗳️ رأی‌گیری و حذف بازیکن</Typography>
+      <Card>
+        <Typography variant="h5">رأی‌گیری و حذف بازیکن</Typography>
         <Typography variant="subtitle1">
           - بازیکنی که بیشترین رأی رو بیاره، به دفاعیه می‌ره.
           <br />
@@ -81,22 +76,20 @@ export default function HowToPlayPage() {
           - اگه چند نفر باشن، رأی‌گیری با چشم بسته انجام می‌شه.
           <br />- بازنده حذف می‌شه و ممکنه بسته به نقشش، «حرکت آخر» داشته باشه.
         </Typography>
-      </Box>
+      </Card>
 
-      {/* -------------------- wining conditions -------------------- */}
-      <Box boxShadow={1} p={2} mb={2}>
-        <Typography variant="h6">🏆 شرایط برد</Typography>
+      <Card>
+        <Typography variant="h6">شرایط برد</Typography>
         <Typography variant="subtitle1">
-          - ✅ شهروندها می‌برن: وقتی تمام مافیاها حذف بشن.
+          - شهروندها می‌برن: وقتی تمام مافیاها حذف بشن.
           <br />
-          - ❌ مافیاها می‌برن: وقتی تعدادشون با شهروندها برابر بشه.
+          - مافیاها می‌برن: وقتی تعدادشون با شهروندها برابر بشه.
           <br />- (نقش‌های خاص ممکنه شرایط برد متفاوتی داشته باشن)
         </Typography>
-      </Box>
+      </Card>
 
-      {/* -------------------- نکته‌های کمکی -------------------- */}
-      <Box boxShadow={1} p={2} mb={2}>
-        <Typography variant="h6">📝 نکته‌های کمکی</Typography>
+      <Card>
+        <Typography variant="h5">نکته‌های کمکی</Typography>
         <Typography variant="subtitle1">
           - به بحث‌ها خوب گوش بده، سعی کن استدلال بیاری نه احساس.
           <br />
@@ -105,7 +98,7 @@ export default function HowToPlayPage() {
           - از رأی دادن نترس، ولی مسئولانه رأی بده.
           <br />- اگه نقش خاص داری، با احتیاط بازی کن که لو نری!
         </Typography>
-      </Box>
-    </div>
+      </Card>
+    </>
   );
 }
