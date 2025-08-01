@@ -13,7 +13,7 @@ import imgHowToPlay from "../assets/mafia-how-to-play.png";
 import imgModeratorGuid from "../assets/mafia-moderator-guid.png";
 import imgRolesGuid from "../assets/mafia-roles-guid.png";
 import imgFAQ from "../assets/mafia-faq.png";
-import { Loop, Refresh, SmartToy } from "@mui/icons-material";
+import { Loop, SmartToy } from "@mui/icons-material";
 
 export default function StartPage() {
   const navigate = useNavigate();
