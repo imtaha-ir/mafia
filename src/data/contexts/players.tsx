@@ -100,6 +100,19 @@ class PlayerContext {
   search(query: string): Player[] {
     return this.players.filter((p) => p.name.includes(query));
   }
+
+  /**
+   * Deletes a player by ID.
+   * @param id Player ID.
+   * @returns {boolean} True if deleted, false if not found.
+   */
+  delete(id: number): boolean {
+    const idx = this.players.findIndex((p) => p.id === id);
+    if (idx === -1) return false;
+    this.players.splice(idx, 1);
+    savePlayers(this.players);
+    return true;
+  }
 }
 
 /**
