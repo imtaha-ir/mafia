@@ -13,6 +13,7 @@ import imgHowToPlay from "../assets/mafia-how-to-play.png";
 import imgModeratorGuid from "../assets/mafia-moderator-guid.png";
 import imgRolesGuid from "../assets/mafia-roles-guid.png";
 import imgFAQ from "../assets/mafia-faq.png";
+import { Loop, Refresh, SmartToy } from "@mui/icons-material";
 
 export default function StartPage() {
   const navigate = useNavigate();
@@ -22,11 +23,29 @@ export default function StartPage() {
       <Typography variant="h3" p={3} textAlign="center">
         مافیا
       </Typography>
-      <Grid container gap={2}>
+      <Grid container gap={2} mt={2} flexDirection={"column"}>
+        <Grid>
+          <MenuCard
+            description="اجرای آخرین بازی انجام شده"
+            icon={() => <Loop style={{ width: 100, height: 50 }} />}
+            title="بازی دوباره"
+            onClick={() => {}}
+          />
+        </Grid>
+        <Grid>
+          <MenuCard
+            description="بازی‌های ذخیره شده یا طراحی بازی جدید از ابتدا"
+            icon={() => <SmartToy style={{ width: 100, height: 50 }} />}
+            title="بازی جدید"
+            onClick={() => {}}
+          />
+        </Grid>
+      </Grid>
+      <Grid container gap={2} mt={2}>
         <MenuCard
           title="چگونه بازی کنیم"
           description="یک راهنمای ساده برای شروع"
-          icon={imgHowToPlay}
+          image={imgHowToPlay}
           onClick={() => {
             navigate(Pages.HowToPlayPage);
           }}
@@ -34,7 +53,7 @@ export default function StartPage() {
         <MenuCard
           title="چگونه بازی گردانی کنیم"
           description="راز و رمز یک بازی‌گردان حرفه‌ای"
-          icon={imgModeratorGuid}
+          image={imgModeratorGuid}
           onClick={() => {
             navigate(Pages.ModeratorGuidePage);
           }}
@@ -42,7 +61,7 @@ export default function StartPage() {
         <MenuCard
           title="نقش‌های بازی"
           description="با نقش‌های بازی بیشتر آشنا شوید"
-          icon={imgRolesGuid}
+          image={imgRolesGuid}
           onClick={() => {
             navigate(Pages.RolesPage);
           }}
@@ -50,7 +69,7 @@ export default function StartPage() {
         <MenuCard
           title="پرسش‌های پر تکرار"
           description="همه همین پرسش‌ها می‌پرسند!"
-          icon={imgFAQ}
+          image={imgFAQ}
           onClick={() => {
             navigate(Pages.FAQPage);
           }}
@@ -63,7 +82,8 @@ export default function StartPage() {
 function MenuCard(attrs: {
   title: string;
   description: string;
-  icon: string;
+  image?: string;
+  icon?: any;
   onClick: () => void;
 }) {
   return (
@@ -73,11 +93,12 @@ function MenuCard(attrs: {
         sx={{ display: "flex", width: "100%" }}
       >
         <CardMedia
-          component="img"
+          component={attrs.icon ? attrs.icon : "img"}
           sx={{ width: 100 }}
-          image={attrs.icon}
+          image={attrs.image}
           alt={attrs.title}
         />
+
         <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
           <CardContent sx={{ flex: "1 0 auto" }}>
             <Typography component="div" variant="h5">

@@ -8,7 +8,7 @@ function App() {
         <Route
           key={`route-${rIndex}`}
           path={r.pathname}
-          element={r.element()}
+          element={<r.element />}
         />
       ))}
     </Routes>
