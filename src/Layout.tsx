@@ -22,8 +22,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const showBack = location.pathname !== "/";
 
   useEffect(() => {
-    const r = routes.find((route) => route.pathname == location.pathname);
-    setTitle(r?.title ?? "مافیا");
+    const r = routes.find((route) => route().pathname == location.pathname);
+    setTitle(r ? r().title : "مافیا");
   }, [location.pathname]);
 
   function handleBack(): void {

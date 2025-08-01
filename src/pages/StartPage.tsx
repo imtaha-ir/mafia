@@ -47,7 +47,7 @@ export default function StartPage() {
           description="یک راهنمای ساده برای شروع"
           image={imgHowToPlay}
           onClick={() => {
-            navigate(Pages.HowToPlayPage);
+            navigate(Pages.HowToPlayPage());
           }}
         />
         <MenuCard
@@ -55,7 +55,7 @@ export default function StartPage() {
           description="راز و رمز یک بازی‌گردان حرفه‌ای"
           image={imgModeratorGuid}
           onClick={() => {
-            navigate(Pages.ModeratorGuidePage);
+            navigate(Pages.ModeratorGuidePage());
           }}
         />
         <MenuCard
@@ -63,7 +63,7 @@ export default function StartPage() {
           description="با نقش‌های بازی بیشتر آشنا شوید"
           image={imgRolesGuid}
           onClick={() => {
-            navigate(Pages.RolesPage);
+            navigate(Pages.RolesPage());
           }}
         />
         <MenuCard
@@ -71,7 +71,7 @@ export default function StartPage() {
           description="همه همین پرسش‌ها می‌پرسند!"
           image={imgFAQ}
           onClick={() => {
-            navigate(Pages.FAQPage);
+            navigate(Pages.FAQPage());
           }}
         />
       </Grid>
