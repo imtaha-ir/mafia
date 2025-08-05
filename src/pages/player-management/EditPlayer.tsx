@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { usePlayerContext } from "../../data/contexts/players";
-import { Avatar, Box, Button, CardActions, Input, TextField } from "@mui/material";
+import { Avatar, Box, Button, CardActions, Stack, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import type { Player } from "../../types/player.type";
 
@@ -34,33 +34,36 @@ export default function EditPlayerPage() {
     navigate("/player-management");
   };
   return (
-    <Box m={8}>
-      <Avatar sx={{ width: 250, height: 250, mb: 2 }} />
+    <Stack m={1} mt={4} alignItems="center">
+      <Avatar src="" alt="" sx={{ width: 200, height: 200, mb: 2 }} />
 
-      <TextField
-        fullWidth
-        placeholder="Name"
-        variant="standard"
-        value={playerData?.name}
-        sx={{ mb: 2 }}
-        onChange={(e) => {
-          if (playerData) {
-            setPlayerData({ ...playerData, name: e.target.value });
-          }
-        }}
-      />
+      <Box m={3}>
+        <TextField
+          fullWidth
+          variant="outlined"
+          label="نام"
+          value={playerData?.name}
+          sx={{ mb: 2 }}
+          onChange={(e) => {
+            if (playerData) {
+              setPlayerData({ ...playerData, name: e.target.value });
+            }
+          }}
+        />
 
-      <Input
-        type="date"
-        value={playerData?.dateOfBirth}
-        sx={{ mb: 2 }}
-        onChange={(e) => {
-          if (playerData) {
-            setPlayerData({ ...playerData, dateOfBirth: e.target.value });
-          }
-        }}
-      />
-
+        <TextField
+          fullWidth
+          label="سال تولد"
+          variant="outlined"
+          sx={{ mb: 2 }}
+          value={playerData?.dateOfBirth}
+          onChange={(e) => {
+            if (playerData) {
+              setPlayerData({ ...playerData, dateOfBirth: e.target.value });
+            }
+          }}
+        />
+      </Box>
       <CardActions>
         <Button onClick={handleCancelButton} variant="outlined">
           لغو
@@ -69,6 +72,6 @@ export default function EditPlayerPage() {
           ذخیره
         </Button>
       </CardActions>
-    </Box>
+    </Stack>
   );
 }
