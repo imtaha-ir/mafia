@@ -24,6 +24,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
   const [title, setTitle] = useState("مافیا");
   const [message, setMessage] = useState<string | null>(null);
+  const [dialogTitle, setDialogTitle] = useState<string | null>(null);
 
   // Show back button if not on root
   const showBack = location.pathname !== "/";
@@ -41,7 +42,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     }
   }
 
-  const showMessage = (msg: string) => setMessage(msg);
+  const showMessage = (msg: string, title?: string) => {
+    setDialogTitle(title ?? null);
+    setMessage(msg);
+  };
 
   return (
     <LayoutContext.Provider value={{ showMessage }}>
@@ -92,7 +96,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </Grid>
         </Grid>
         <Dialog open={!!message} onClose={() => setMessage(null)}>
-          <DialogTitle>Message</DialogTitle>
+          <DialogTitle>{dialogTitle ?? ""}</DialogTitle>
           <DialogContent>{message}</DialogContent>
           <DialogActions>
             <Button onClick={() => setMessage(null)}>Close</Button>

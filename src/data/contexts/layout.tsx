@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 
 export interface LayoutContextType {
-  showMessage: (msg: string) => void;
+  showMessage: (msg: string, title?: string) => void;
 }
 
 export const LayoutContext = createContext<LayoutContextType>({
