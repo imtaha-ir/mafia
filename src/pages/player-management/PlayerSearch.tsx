@@ -1,24 +1,33 @@
-import SearchIcon from '@mui/icons-material/Search';
-import { useState, type SetStateAction } from 'react';
+import SearchIcon from "@mui/icons-material/Search";
+import { useState, type SetStateAction } from "react";
+import { usePlayerContext } from "../../data/contexts/players";
+import { Box, Card } from "@mui/material";
 export default function PlayerSearchComponent() {
-  const [input,setinput]=useState("");
-  const fetchData = (value: any) => {
-    fetch("https://jsonplaceholder.typicode.com/users")
-    .then((response)=> response . json())
-    .then((json)=>{
-      console.log(json)
-     });
+  const [searchQuery, setSearchQuery] = useState("");
+  const playerDB = usePlayerContext();
+  const allPlayers = playerDB.list;
+
+  const handlechange = (value: any) => {
+    setSearchQuery(value);
   };
-  const handlechange=(value:any)=>{
-    setinput(value);
-    fetchData(value) 
-  }
   return (
     <div>
-    <SearchIcon/>
-    <input placeholder='Type to search...'
-     value={input}
-     onChange={(e)=> handlechange(e.target.value)}/> 
+      <SearchIcon />
+      <input
+        placeholder="Type to search..."
+        value={searchQuery}
+        onChange={(e) => handlechange(e.target.value)}
+      />
+      <Box>
+        {allPlayers
+          .filter((player) => {
+            if (!searchQuery) return true;
+            return player.name.includes(searchQuery);
+          })
+          .map((player) => (
+            <Card>{player.name}</Card>
+          ))}
+      </Box>
     </div>
-  )
+  );
 }
