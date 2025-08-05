@@ -37,7 +37,10 @@ export default function PlayerManagementPage() {
   }
 
   function handleDeletePlayer(id: number) {
-    playerDB.delete(id);
+    if (window.confirm("آیا از حذف این بازیکن مطمئن هستید؟")) {
+      playerDB.delete(id);
+      setPlayerList((list) => list.filter((p) => p.id !== id));
+    }
   }
   function handleEditPlayer(id: number) {
     navigate(Pages.PlayerEditPage(id));
@@ -70,18 +73,7 @@ export default function PlayerManagementPage() {
                       <Edit />
                     </IconButton>
                   </Grid>
-                  <IconButton
-                    onClick={() => {
-                      if (
-                        window.confirm("آیا از حذف این بازیکن مطمئن هستید؟")
-                      ) {
-                        handleDeletePlayer(player.id);
-                        setPlayerList((list) =>
-                          list.filter((p) => p.id !== player.id)
-                        );
-                      }
-                    }}
-                  >
+                  <IconButton onClick={() => handleDeletePlayer(player.id)}>
                     <Delete />
                   </IconButton>
                 </Grid>
@@ -90,7 +82,11 @@ export default function PlayerManagementPage() {
           </Grid>
         ))}
       </Grid>
-      <Fab aria-label="add" onClick={handleAddPlayer}>
+      <Fab
+        aria-label="add"
+        onClick={handleAddPlayer}
+        sx={{ position: "fixed", right: 10, bottom: 10 }}
+      >
         <Add />
       </Fab>
     </Paper>
