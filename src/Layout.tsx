@@ -8,6 +8,12 @@ import Box from "@mui/material/Box";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Grid } from "@mui/material";
 import routes from "./Routes";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+import { LayoutContext } from "./data/contexts/layout";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -17,6 +23,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [title, setTitle] = useState("مافیا");
+  const [message, setMessage] = useState<string | null>(null);
 
   // Show back button if not on root
   const showBack = location.pathname !== "/";
@@ -34,54 +41,65 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     }
   }
 
+  const showMessage = (msg: string) => setMessage(msg);
+
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        bgcolor: "background.default",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      <AppBar position="static" color="primary">
-        <Toolbar>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, textAlign: "center" }}
-          >
-            {title || "Mafia"}
-          </Typography>
-          {showBack && (
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={() => handleBack()}
-              aria-label="back"
+    <LayoutContext.Provider value={{ showMessage }}>
+      <Box
+        sx={{
+          minHeight: "100vh",
+          bgcolor: "background.default",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <AppBar position="static" color="primary">
+          <Toolbar>
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ flexGrow: 1, textAlign: "center" }}
             >
-              <ArrowBackIcon />
-            </IconButton>
-          )}
-        </Toolbar>
-      </AppBar>
-      <Grid flexGrow={1} width={"100%"} position="relative">
-        <Grid
-          sx={{
-            position: "absolute",
-            overflowY: "scroll",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            scrollbarWidth: "thin",
-          }}
-          p={1}
-        >
-          {children}
+              {title || "Mafia"}
+            </Typography>
+            {showBack && (
+              <IconButton
+                edge="start"
+                color="inherit"
+                onClick={() => handleBack()}
+                aria-label="back"
+              >
+                <ArrowBackIcon />
+              </IconButton>
+            )}
+          </Toolbar>
+        </AppBar>
+        <Grid flexGrow={1} width={"100%"} position="relative">
+          <Grid
+            sx={{
+              position: "absolute",
+              overflowY: "scroll",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              scrollbarWidth: "thin",
+            }}
+            p={1}
+          >
+            {children}
+          </Grid>
         </Grid>
-      </Grid>
-    </Box>
+        <Dialog open={!!message} onClose={() => setMessage(null)}>
+          <DialogTitle>Message</DialogTitle>
+          <DialogContent>{message}</DialogContent>
+          <DialogActions>
+            <Button onClick={() => setMessage(null)}>Close</Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
+    </LayoutContext.Provider>
   );
 };
 
