@@ -5,6 +5,9 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
 export default function AddPlayerPage() {
+  const handleClick = () => {
+    console.log("hello");
+  };
   return (
     <>
       <Stack direction="row" spacing={2}>
@@ -21,7 +24,9 @@ export default function AddPlayerPage() {
         <TextField id="outlined-basic" variant="outlined" type="date" />
       </Box>
       <Stack spacing={2} direction="row">
-        <Button variant="contained">ذخیره</Button>
+        <Button variant="contained" onClick={handleClick}>
+          ذخیره
+        </Button>
       </Stack>
     </>
   );
