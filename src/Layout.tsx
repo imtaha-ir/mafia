@@ -13,7 +13,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
-import { LayoutContext } from "./data/contexts/layout";
+import { ScreenContext } from "./data/contexts/screen";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -48,7 +48,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   };
 
   return (
-    <LayoutContext.Provider value={{ showMessage }}>
+    <ScreenContext.Provider value={{ showMessage }}>
       <Box
         sx={{
           minHeight: "100vh",
@@ -103,7 +103,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </DialogActions>
         </Dialog>
       </Box>
-    </LayoutContext.Provider>
+    </ScreenContext.Provider>
   );
 };
 
