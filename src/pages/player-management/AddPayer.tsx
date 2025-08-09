@@ -30,7 +30,7 @@ export default function AddPlayerPage() {
   return (
     <>
       <Stack spacing={3} alignItems="center">
-        <Avatar alt="?" src="?" sx={{ width: "200px", height: "200px" }} />
+        <Avatar sx={{ width: "200px", height: "200px" }} />
 
         <Stack spacing={1}>
           <TextField
