@@ -1,7 +1,6 @@
-import SearchIcon from "@mui/icons-material/Search";
-import { useState, type SetStateAction } from "react";
-import { usePlayerContext } from "../../data/contexts/players";
-import { Box, Card, Grid, IconButton, InputBase, Paper } from "@mui/material";
+import { useState } from "react";
+import { usePlayerContext } from "../data/contexts/players";
+import { Card, Grid, IconButton, InputBase } from "@mui/material";
 import { Clear } from "@mui/icons-material";
 export default function PlayerSearchComponent() {
   const [searchQuery, setSearchQuery] = useState("");

@@ -1,8 +1,16 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { usePlayerContext } from "../../data/contexts/players";
-import { Avatar, Box, Button, CardActions, Stack, TextField } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  CardActions,
+  Stack,
+  TextField,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import type { Player } from "../../types/player.type";
+import { useScreen } from "../../data/contexts/screen";
 
 export default function EditPlayerPage() {
   const { id } = useParams();
@@ -10,6 +18,7 @@ export default function EditPlayerPage() {
   const navigate = useNavigate();
   const playerDB = usePlayerContext();
   const [playerData, setPlayerData] = useState<Player>();
+  const screen = useScreen();
 
   useEffect(() => {
     if (playerId !== null) {
@@ -24,9 +33,9 @@ export default function EditPlayerPage() {
     const { id, ...updates } = playerData;
     const updated = playerDB.apply(id, updates);
     if (updated) {
-      alert("تغییرات اعمال شد");
+      screen.showMessage("تغییرات اعمال شد");
     } else {
-      alert("بازیکن پیدا نشد");
+      screen.showMessage("بازیکن پیدا نشد");
     }
     navigate("/player-management");
   };

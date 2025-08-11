@@ -13,11 +13,13 @@ import {
   Typography,
 } from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
+import { useScreen } from "../../data/contexts/screen";
 
 export default function PlayerManagementPage() {
   const playerDB = usePlayerContext();
   const navigate = useNavigate();
   const [playerList, setPlayerList] = useState<Player[]>([]);
+  const screen = useScreen();
   function calculateAge(dateStr?: string) {
     if (!dateStr) {
       return "-";
@@ -37,10 +39,10 @@ export default function PlayerManagementPage() {
   }
 
   function handleDeletePlayer(id: number) {
-    if (window.confirm("آیا از حذف این بازیکن مطمئن هستید؟")) {
+    screen.confirm("آیا از حذف این بازیکن مطمئن هستید؟", "مافیا", () => {
       playerDB.delete(id);
       setPlayerList((list) => list.filter((p) => p.id !== id));
-    }
+    });
   }
   function handleEditPlayer(id: number) {
     navigate(Pages.PlayerEditPage(id));

@@ -31,7 +31,7 @@ type GameContextType = {
   deleteGame: (id: number) => void;
   addLog: (message: string) => void;
   listGames: () => GameState[];
-  addRoleToPlayer: (playerId: number, role: Role) => void;
+  assignRoleToPlayer: (playerId: number, role: Role) => void;
 };
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -158,7 +158,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
    * @param {string} playerId - The ID of the player.
    * @param {Role} role - The role to assign.
    */
-  const addRoleToPlayer = (playerId: number, role: Role) => {
+  const assignRoleToPlayer = (playerId: number, role: Role) => {
     if (!currentGame) return;
     const updatedPlayers = currentGame.settings.players.map((player) =>
       player.id === playerId ? { ...player, role } : player
@@ -190,7 +190,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         deleteGame,
         addLog,
         listGames,
-        addRoleToPlayer,
+        assignRoleToPlayer,
       }}
     >
       {children}

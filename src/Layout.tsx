@@ -25,6 +25,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [title, setTitle] = useState("مافیا");
   const [message, setMessage] = useState<string | null>(null);
   const [dialogTitle, setDialogTitle] = useState<string | null>(null);
+  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
+  const [onOk, setOnOk] = useState<() => void>(() => {});
+  const [onCancel, setOnCancel] = useState<() => void>();
 
   // Show back button if not on root
   const showBack = location.pathname !== "/";
@@ -47,8 +50,41 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     setMessage(msg);
   };
 
+  const confirm = (
+    msg: string,
+    title: string | undefined,
+    onOkClick: () => void,
+    onCancelClick?: () => void
+  ) => {
+    setDialogTitle(title ?? null);
+    setMessage(msg);
+    setOnOk(() => onOkClick);
+    setOnCancel(() => onCancelClick);
+    setConfirmOpen(true);
+  };
+
+  function handleConfirmClose(
+    event?: {},
+    reason?: "backdropClick" | "escapeKeyDown"
+  ): void {
+    if (onCancel) {
+      onCancel();
+    }
+    setMessage(null);
+    setOnCancel(undefined);
+    setOnOk(() => {});
+    setConfirmOpen(false);
+  }
+  function handleConfirmOk() {
+    onOk();
+    setMessage(null);
+    setOnCancel(undefined);
+    setOnOk(() => {});
+    setConfirmOpen(false);
+  }
+
   return (
-    <ScreenContext.Provider value={{ showMessage }}>
+    <ScreenContext.Provider value={{ showMessage, confirm }}>
       <Box
         sx={{
           minHeight: "100vh",
@@ -95,11 +131,19 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             {children}
           </Grid>
         </Grid>
-        <Dialog open={!!message} onClose={() => setMessage(null)}>
+        <Dialog open={Boolean(message)} onClose={() => setMessage(null)}>
           <DialogTitle>{dialogTitle ?? ""}</DialogTitle>
           <DialogContent>{message}</DialogContent>
           <DialogActions>
-            <Button onClick={() => setMessage(null)}>Close</Button>
+            <Button onClick={() => setMessage(null)}>باشه</Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog open={confirmOpen} onClose={handleConfirmClose}>
+          <DialogTitle>{dialogTitle ?? ""}</DialogTitle>
+          <DialogContent>{message}</DialogContent>
+          <DialogActions>
+            <Button onClick={handleConfirmOk}>بله</Button>
+            <Button onClick={handleConfirmClose}>خیر</Button>
           </DialogActions>
         </Dialog>
       </Box>

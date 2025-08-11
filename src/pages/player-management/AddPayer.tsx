@@ -5,26 +5,26 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { usePlayerContext } from "../../data/contexts/players";
 import { useState } from "react";
+import { useScreen } from "../../data/contexts/screen";
 
 export default function AddPlayerPage() {
   const playerDB = usePlayerContext();
   const [name, setName] = useState<string>();
   const [yearOfBirth, setYearOfBirth] = useState<number>(1360);
-  const showMessage = (msg: string) => {
-    alert(msg);
-  };
+  const screen = useScreen();
+
   const handleClick = () => {
     if (name) {
       const addedPlayer = playerDB.add({ name });
       if (addedPlayer) {
-        showMessage("Saved");
+        screen.showMessage("ذخیره شد");
         setName("");
         setYearOfBirth(1360);
       } else {
-        showMessage("Player exists");
+        screen.showMessage("بازیکن قبلا ثبت شده است");
       }
     } else {
-      showMessage("Fill out all inputs");
+      screen.showMessage("همه اطلاعات را وارد نمایید", "مافیا");
     }
   };
   return (
