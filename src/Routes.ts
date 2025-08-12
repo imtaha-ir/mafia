@@ -1,12 +1,13 @@
 import AddPlayerPage from "./pages/player-management/AddPayer";
 import EditPlayerPage from "./pages/player-management/EditPlayer";
 import PlayerManagementPage from "./pages/player-management/PlayerManagementPage";
-import PlayerSearchComponent from "./components/PlayerSearch";
+import PlayerSearchComponent from "./components/PlayerSearchDialog";
 import StartPage from "./pages/StartPage";
 import FAQPage from "./pages/static/FAQ";
 import HowToPlayPage from "./pages/static/HowToPlay";
 import ModeratorGuidePage from "./pages/static/ModeratorGuide";
 import RolesPage from "./pages/static/Roles";
+import TestPage from "./pages/TestPage";
 
 export const Pages = {
   StartPage: () => ({ pathname: "/", element: StartPage, title: "مافیا" }),
@@ -46,9 +47,9 @@ export const Pages = {
     title: "Edit Player",
   }),
   PlayerSearchPage: () => ({
-    pathname: "/player-management/search",
-    element: PlayerSearchComponent,
-    title: "searc Player",
+    pathname: "/test",
+    element: TestPage,
+    title: "Test Page",
   }),
 };
 

@@ -17,7 +17,24 @@ type GameSettings = {
 type GameState = {
   id: number;
   settings: GameSettings;
-  state: any; // Replace with your actual game state type
+  state: {
+    status:
+      | "NEW"
+      | "PLAYERS_OK"
+      | "ROLES_ASSIGNED"
+      | "ROLES_VITRINE"
+      | "GAME_CYCLE"
+      | "FINISHED";
+    gameCycleStep?:
+      | "NIGHT"
+      | "DAY"
+      | "VOTE"
+      | "EXECUTION"
+      | "DISCUSSION"
+      | "BLIND_DAY"
+      | "END"
+      | "";
+  };
   logs: GameLogEntry[];
   lastPlay: number;
 };
@@ -32,6 +49,10 @@ type GameContextType = {
   addLog: (message: string) => void;
   listGames: () => GameState[];
   assignRoleToPlayer: (playerId: number, role: Role) => void;
+  addPlayerToCurrentGame: (player: GamePlayer) => void;
+  removePlayerFromCurrentGame: (playerId: number) => void;
+  addRoleToCurrentGame: (role: Role) => void;
+  assignRandomRolesToPlayers: () => void;
 };
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -81,7 +102,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     const newGame: GameState = {
       id: Date.now(),
       settings,
-      state: {}, // Initialize your game state here
+      state: { status: "NEW" }, // Initialize your game state here
       logs: [],
       lastPlay: Date.now(),
     };
@@ -155,13 +176,118 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 
   /**
    * Assign a role to a player in the current game.
-   * @param {string} playerId - The ID of the player.
+   * @param {number} playerId - The ID of the player.
    * @param {Role} role - The role to assign.
    */
   const assignRoleToPlayer = (playerId: number, role: Role) => {
     if (!currentGame) return;
     const updatedPlayers = currentGame.settings.players.map((player) =>
       player.id === playerId ? { ...player, role } : player
+    );
+    const updatedSettings = {
+      ...currentGame.settings,
+      players: updatedPlayers,
+    };
+    const updatedGame = {
+      ...currentGame,
+      settings: updatedSettings,
+    };
+    setCurrentGame(updatedGame);
+    const updatedGames = storedGames.map((g) =>
+      g.id === updatedGame.id ? updatedGame : g
+    );
+    setStoredGames(updatedGames);
+    saveGamesToStorage(updatedGames);
+  };
+
+  /**
+   * Add a player to the current game.
+   * @param {GamePlayer} player - The player to add.
+   */
+  const addPlayerToCurrentGame = (player: GamePlayer) => {
+    if (!currentGame) return;
+    const updatedPlayers = [...currentGame.settings.players, player];
+    const updatedSettings = {
+      ...currentGame.settings,
+      players: updatedPlayers,
+    };
+    const updatedGame = {
+      ...currentGame,
+      settings: updatedSettings,
+    };
+    setCurrentGame(updatedGame);
+    const updatedGames = storedGames.map((g) =>
+      g.id === updatedGame.id ? updatedGame : g
+    );
+    setStoredGames(updatedGames);
+    saveGamesToStorage(updatedGames);
+  };
+
+  /**
+   * Remove a player from the current game by ID.
+   * @param {number} playerId - The ID of the player to remove.
+   */
+  const removePlayerFromCurrentGame = (playerId: number) => {
+    if (!currentGame) return;
+    const updatedPlayers = currentGame.settings.players.filter(
+      (player) => player.id !== playerId
+    );
+    const updatedSettings = {
+      ...currentGame.settings,
+      players: updatedPlayers,
+    };
+    const updatedGame = {
+      ...currentGame,
+      settings: updatedSettings,
+    };
+    setCurrentGame(updatedGame);
+    const updatedGames = storedGames.map((g) =>
+      g.id === updatedGame.id ? updatedGame : g
+    );
+    setStoredGames(updatedGames);
+    saveGamesToStorage(updatedGames);
+  };
+
+  /**
+   * Add a role to the current game's available roles.
+   * @param {Role} role - The role to add.
+   */
+  const addRoleToCurrentGame = (role: Role) => {
+    if (!currentGame) return;
+    const updatedRoles = [...currentGame.settings.roles, role];
+    const updatedSettings = {
+      ...currentGame.settings,
+      roles: updatedRoles,
+    };
+    const updatedGame = {
+      ...currentGame,
+      settings: updatedSettings,
+    };
+    setCurrentGame(updatedGame);
+    const updatedGames = storedGames.map((g) =>
+      g.id === updatedGame.id ? updatedGame : g
+    );
+    setStoredGames(updatedGames);
+    saveGamesToStorage(updatedGames);
+  };
+
+  /**
+   * Assign random roles from the current game's roles to its players.
+   * Each player gets one random role, roles are shuffled and assigned in order.
+   * If there are fewer roles than players, only that many players get roles.
+   */
+  const assignRandomRolesToPlayers = () => {
+    if (!currentGame) return;
+    const roles = [...currentGame.settings.roles];
+    const players = [...currentGame.settings.players];
+    // Shuffle roles
+    for (let i = roles.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [roles[i], roles[j]] = [roles[j], roles[i]];
+    }
+    // Assign roles to players
+    const updatedPlayers = players.map((player, idx) =>
+      idx < roles.length ? { ...player, role: roles[idx] } : { ...player }
     );
     const updatedSettings = {
       ...currentGame.settings,
@@ -191,6 +317,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         addLog,
         listGames,
         assignRoleToPlayer,
+        addPlayerToCurrentGame,
+        removePlayerFromCurrentGame,
+        addRoleToCurrentGame,
+        assignRandomRolesToPlayers,
       }}
     >
       {children}

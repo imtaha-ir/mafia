@@ -2,7 +2,7 @@ import { useState } from "react";
 import { usePlayerContext } from "../data/contexts/players";
 import { Card, Grid, IconButton, InputBase } from "@mui/material";
 import { Clear } from "@mui/icons-material";
-export default function PlayerSearchComponent() {
+export default function PlayerSearchDialog() {
   const [searchQuery, setSearchQuery] = useState("");
   const playerDB = usePlayerContext();
   const allPlayers = playerDB.list;
