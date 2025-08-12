@@ -42,35 +42,52 @@ type GameState = {
 type GameContextType = {
   currentGame: GameState | null;
   storedGames: GameState[];
-  createNewGame: (settings: GameSettings) => void;
+  createNewGame: (settings?: GameSettings) => void;
   loadGame: (id: number) => void;
+  loadLastGame: () => boolean;
   saveCurrentGame: () => void;
   deleteGame: (id: number) => void;
   addLog: (message: string) => void;
   listGames: () => GameState[];
   assignRoleToPlayer: (playerId: number, role: Role) => void;
-  addPlayerToCurrentGame: (player: GamePlayer) => void;
+  addPlayerToCurrentGame: (players: GamePlayer[]) => void;
   removePlayerFromCurrentGame: (playerId: number) => void;
-  addRoleToCurrentGame: (role: Role) => void;
+  getGamePlayers: () => GamePlayer[];
+  addRoleToCurrentGame: (roles: Role[]) => void;
   assignRandomRolesToPlayers: () => void;
 };
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
-const LOCAL_STORAGE_KEY = "mafia_games";
+export const LOCAL_STORAGE_KEY = "mafia_storage";
 
+export function getStoredData(key: string) {
+  const data = localStorage.getItem(LOCAL_STORAGE_KEY);
+  if (!data) return [];
+  try {
+    const jsonData = JSON.parse(data);
+    return jsonData[key] ?? [];
+  } catch {
+    return [];
+  }
+}
+export function saveData(key: string, updatedData: any) {
+  const data = localStorage.getItem(LOCAL_STORAGE_KEY);
+  let dataObj: any = {};
+  if (data) {
+    try {
+      dataObj = JSON.parse(data);
+    } catch {}
+  }
+  dataObj[key] = updatedData;
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(dataObj));
+}
 /**
  * Retrieve stored games from localStorage.
  * @returns {GameState[]} Array of stored games.
  */
 function getStoredGames(): GameState[] {
-  const data = localStorage.getItem(LOCAL_STORAGE_KEY);
-  if (!data) return [];
-  try {
-    return JSON.parse(data);
-  } catch {
-    return [];
-  }
+  return getStoredData("games");
 }
 
 /**
@@ -78,7 +95,7 @@ function getStoredGames(): GameState[] {
  * @param {GameState[]} games - Array of games to save.
  */
 function saveGamesToStorage(games: GameState[]) {
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(games));
+  saveData("games", games);
 }
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -98,10 +115,14 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
    * Create a new game with the given settings.
    * @param {GameSettings} settings - Settings for the new game.
    */
-  const createNewGame = (settings: GameSettings) => {
+  const createNewGame = (settings?: GameSettings) => {
     const newGame: GameState = {
       id: Date.now(),
-      settings,
+      settings: settings ?? {
+        name: new Date().toLocaleString(),
+        players: [],
+        roles: [],
+      },
       state: { status: "NEW" }, // Initialize your game state here
       logs: [],
       lastPlay: Date.now(),
@@ -204,17 +225,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
    * Add a player to the current game.
    * @param {GamePlayer} player - The player to add.
    */
-  const addPlayerToCurrentGame = (player: GamePlayer) => {
+  const addPlayerToCurrentGame = (players: GamePlayer[]) => {
     if (!currentGame) return;
-    const updatedPlayers = [...currentGame.settings.players, player];
-    const updatedSettings = {
-      ...currentGame.settings,
-      players: updatedPlayers,
-    };
-    const updatedGame = {
-      ...currentGame,
-      settings: updatedSettings,
-    };
+    const updatedGame = { ...currentGame };
+    updatedGame.settings.players.push(...players);
     setCurrentGame(updatedGame);
     const updatedGames = storedGames.map((g) =>
       g.id === updatedGame.id ? updatedGame : g
@@ -232,13 +246,9 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     const updatedPlayers = currentGame.settings.players.filter(
       (player) => player.id !== playerId
     );
-    const updatedSettings = {
-      ...currentGame.settings,
-      players: updatedPlayers,
-    };
     const updatedGame = {
       ...currentGame,
-      settings: updatedSettings,
+      settings: { ...currentGame.settings, players: updatedPlayers },
     };
     setCurrentGame(updatedGame);
     const updatedGames = storedGames.map((g) =>
@@ -249,20 +259,23 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   /**
+   * Get players of current game.
+    @returns {GamePlayer[]} players of current game.
+   */
+  const getGamePlayers = () => {
+    return currentGame?.settings.players ?? ([] as GamePlayer[]);
+  };
+
+  /**
    * Add a role to the current game's available roles.
    * @param {Role} role - The role to add.
    */
-  const addRoleToCurrentGame = (role: Role) => {
+  const addRoleToCurrentGame = (roles: Role[]) => {
     if (!currentGame) return;
-    const updatedRoles = [...currentGame.settings.roles, role];
-    const updatedSettings = {
-      ...currentGame.settings,
-      roles: updatedRoles,
-    };
     const updatedGame = {
       ...currentGame,
-      settings: updatedSettings,
     };
+    updatedGame.settings.roles.push(...roles);
     setCurrentGame(updatedGame);
     const updatedGames = storedGames.map((g) =>
       g.id === updatedGame.id ? updatedGame : g
@@ -305,6 +318,18 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     saveGamesToStorage(updatedGames);
   };
 
+  /**
+   * Load the most recently played game and set it as the current game.
+   */
+  const loadLastGame = () => {
+    if (storedGames?.length === 0) return false;
+    const lastGame = storedGames.reduce((prev, curr) =>
+      curr.lastPlay > prev.lastPlay ? curr : prev
+    );
+    setCurrentGame(lastGame);
+    return true;
+  };
+
   return (
     <GameContext.Provider
       value={{
@@ -319,8 +344,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         assignRoleToPlayer,
         addPlayerToCurrentGame,
         removePlayerFromCurrentGame,
+        getGamePlayers,
         addRoleToCurrentGame,
         assignRandomRolesToPlayers,
+        loadLastGame,
       }}
     >
       {children}

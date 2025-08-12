@@ -10,6 +10,7 @@ import App from "./App";
 import rtlStylish from "stylis-plugin-rtl";
 import Layout from "./Layout";
 import PlayerProvider from "./data/contexts/players";
+import { GameProvider } from "./data/contexts/game";
 
 const cacheRtl = createCache({
   key: "muirtl",
@@ -24,11 +25,13 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <ThemeProvider theme={theme}>
         <BrowserRouter>
           <CssBaseline />
-          <Layout>
-            <PlayerProvider>
-              <App />
-            </PlayerProvider>
-          </Layout>
+          <PlayerProvider>
+            <GameProvider>
+              <Layout>
+                <App />
+              </Layout>
+            </GameProvider>
+          </PlayerProvider>
         </BrowserRouter>
       </ThemeProvider>
     </CacheProvider>

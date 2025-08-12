@@ -1,15 +1,13 @@
 import React, { createContext, useContext, useMemo } from "react";
 import type { Player } from "../../types/player.type";
-
-const STORAGE_KEY = "players";
+import { getStoredData, saveData } from "./game";
 
 function loadPlayers(): Player[] {
-  const data = localStorage.getItem(STORAGE_KEY);
-  return data ? JSON.parse(data) : [];
+  return getStoredData("players");
 }
 
 function savePlayers(players: Player[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(players));
+  saveData("players", players);
 }
 
 /**
