@@ -1,36 +1,37 @@
-import { Accordion, AccordionDetails, AccordionSummary, Card, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Box, Card, Divider, Paper, Stack, Typography } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import RoleDetails from "../../data/static/roles.data";
 
 export default function HowToPlayPage() {
   return (
-    <>
-      <Card>
-        <Typography variant="h4" textAlign="center">
-          راهنمای بازی
-        </Typography>
-      </Card>
-
-      <Card>
-        <Typography variant="h5">مافیا چیه؟</Typography>
+    <Paper style={{ margin: 5, padding: 15 }}>
+      <Stack>
+        <Divider sx={{ my: 2 }}>
+          <Typography variant="h5">مافیا چیه؟</Typography>
+        </Divider>
         <Typography variant="subtitle1">
           مافیا یک بازی گروهیه که بین دو تیم اصلی انجام می‌شه:
-          <br />- <strong>شهروندها</strong>
           <br />- <strong>مافیا</strong>
+          <br />- <strong>شهروندها</strong>
           <br />
           هدف هر تیم اینه که تیم مقابل رو کامل حذف کنه. بازی توی شب و روز به‌صورت نوبتی انجام می‌شه.
         </Typography>
-      </Card>
+      </Stack>
 
-      <Card>
-        <Typography variant="h5">هدف بازی</Typography>
+      <Stack>
+        <Divider sx={{ my: 2 }}>
+          <Typography variant="h5">هدف بازی</Typography>
+        </Divider>
         <Typography variant="subtitle1">
           - شهروندها وقتی برنده می‌شن که تمام مافیاها حذف بشن.
           <br />- مافیا زمانی برنده می‌شه که تعدادشون با شهروندهای زنده برابر بشه.
         </Typography>
-      </Card>
+      </Stack>
 
-      <Card>
-        <Typography variant="h5">روند بازی (چرخه روز و شب)</Typography>
+      <Stack gap={1}>
+        <Divider sx={{ my: 2 }}>
+          <Typography variant="h5">روند بازی (چرخه روز و شب)</Typography>
+        </Divider>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography>
@@ -46,7 +47,6 @@ export default function HowToPlayPage() {
             </Typography>
           </AccordionDetails>
         </Accordion>
-
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography>
@@ -62,10 +62,12 @@ export default function HowToPlayPage() {
             </Typography>
           </AccordionDetails>
         </Accordion>
-      </Card>
+      </Stack>
 
-      <Card>
-        <Typography variant="h5">رأی‌گیری و حذف بازیکن</Typography>
+      <Stack>
+        <Divider sx={{ my: 2 }}>
+          <Typography variant="h5">رأی‌گیری و حذف بازیکن</Typography>
+        </Divider>
         <Typography variant="subtitle1">
           - بازیکنی که بیشترین رأی رو بیاره، به دفاعیه می‌ره.
           <br />
@@ -76,20 +78,22 @@ export default function HowToPlayPage() {
           - اگه چند نفر باشن، رأی‌گیری با چشم بسته انجام می‌شه.
           <br />- بازنده حذف می‌شه و ممکنه بسته به نقشش، «حرکت آخر» داشته باشه.
         </Typography>
-      </Card>
+      </Stack>
 
-      <Card>
-        <Typography variant="h6">شرایط برد</Typography>
+      <Stack>
+        <Divider sx={{ my: 2 }}>
+          <Typography variant="h5">شرایط برد</Typography>
+        </Divider>
         <Typography variant="subtitle1">
-          - شهروندها می‌برن: وقتی تمام مافیاها حذف بشن.
-          <br />
-          - مافیاها می‌برن: وقتی تعدادشون با شهروندها برابر بشه.
-          <br />- (نقش‌های خاص ممکنه شرایط برد متفاوتی داشته باشن)
+          - شهروندها : وقتی تمام مافیاها حذف بشن.
+          <br />- مافیاها : وقتی تعدادشون با شهروندها برابر بشه.
         </Typography>
-      </Card>
+      </Stack>
 
-      <Card>
-        <Typography variant="h5">نکته‌های کمکی</Typography>
+      <Stack>
+        <Divider sx={{ my: 2 }}>
+          <Typography variant="h5">نکته‌های کمکی</Typography>
+        </Divider>
         <Typography variant="subtitle1">
           - به بحث‌ها خوب گوش بده، سعی کن استدلال بیاری نه احساس.
           <br />
@@ -98,7 +102,47 @@ export default function HowToPlayPage() {
           - از رأی دادن نترس، ولی مسئولانه رأی بده.
           <br />- اگه نقش خاص داری، با احتیاط بازی کن که لو نری!
         </Typography>
-      </Card>
-    </>
+      </Stack>
+
+      <Stack gap={1}>
+        <Divider sx={{ my: 2 }}>
+          <Typography variant="h5">نقش‌های بازی</Typography>
+        </Divider>
+        <Typography variant="h6">تیم مافیا :</Typography>
+        {RoleDetails.map(
+          (role) =>
+            role.side === "MAFIA" && (
+              <Accordion key={role.id}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography>
+                    <strong>{role.name}</strong>
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography variant="subtitle1">{role.longDescription}</Typography>
+                </AccordionDetails>
+              </Accordion>
+            )
+        )}
+        <Typography variant="h6" mt={1}>
+          تیم شهروند :
+        </Typography>
+        {RoleDetails.map(
+          (role) =>
+            role.side === "TOWN" && (
+              <Accordion key={role.id}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography>
+                    <strong>{role.name}</strong>
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography variant="subtitle1">{role.longDescription}</Typography>
+                </AccordionDetails>
+              </Accordion>
+            )
+        )}
+      </Stack>
+    </Paper>
   );
 }
