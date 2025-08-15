@@ -3,6 +3,6 @@ export interface Role  {
   id: number;
   name: string;
   side: RoleSide;
-  shortDescription: string;
-  longDescription: string;
+  description: string;
+  longDescription?: string;
 };
