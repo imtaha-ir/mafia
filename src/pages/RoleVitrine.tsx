@@ -19,16 +19,19 @@ export default function RoleVitrine() {
     navigate(""); // i can't find
   };
   const handleNextButton = () => {
-    if (playerCount === playersSeenCount) {
+    if (playerCount === 0) {
+      screen.showMessage("بازیکنی یافت نشد!");
+    } else if (playerCount === playersSeenCount) {
       navigate(""); // i can't find
     } else {
-      screen.showMessage("هنوز همه بازیکن ها نقششون رو ندیدن");
+      screen.showMessage("هنوز همه بازیکن ها نقششون رو ندیدن!");
     }
   };
-
   useEffect(() => {
     if (playersAndRoles) {
       setPlayerCount(playersAndRoles?.length);
+    } else {
+      screen.showMessage("بازیکنی یافت نشد!");
     }
   }, [playersAndRoles]);
 
@@ -51,7 +54,7 @@ export default function RoleVitrine() {
 
       <Box position={"fixed"} bottom={0} right={0} width={"100%"}>
         <Card>
-          <Grid container flexGrow={1} sx={{ justifyContent: "space-between" }}>
+          <Grid container sx={{ justifyContent: "space-between" }}>
             <Grid>
               <CardActions onClick={handleBackButton}>
                 <Button color="error" variant="outlined">
@@ -61,7 +64,7 @@ export default function RoleVitrine() {
             </Grid>
             <Grid>
               <CardActions onClick={handleNextButton}>
-                <Button variant="contained" color={playersSeenCount === playerCount ? "success" : "inherit"}>
+                <Button variant="contained" color={playersSeenCount === playerCount && playerCount != 0 ? "success" : "inherit"}>
                   صفحه بعد
                 </Button>
               </CardActions>

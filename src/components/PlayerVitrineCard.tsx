@@ -15,18 +15,17 @@ interface playerCardProps {
 export default function PlayerCard({ name, avatar, role, roleDesc, side, seenCount }: playerCardProps) {
   const [displayCounter, setDisplayCounter] = useState<number>(0);
   const [open, setOpen] = useState(false);
-  const onOpenPopUp = () => {
+  const addDisplayCounter = () => {
     setDisplayCounter(displayCounter + 1);
-    setOpen(!open);
-    seenCount;
   };
-  const onClosePopUp = () => {
-    setOpen(false);
-  };
-
   return (
     <>
-      <Box my={1} onClick={onOpenPopUp}>
+      <Box
+        my={1}
+        onClick={() => {
+          setOpen(true);
+        }}
+      >
         <Card>
           <Grid
             container
@@ -59,8 +58,9 @@ export default function PlayerCard({ name, avatar, role, roleDesc, side, seenCou
         role={role}
         roleDesc={roleDesc}
         open={open}
-        onClose={onClosePopUp}
+        setOpen={setOpen}
         seenCount={seenCount}
+        addDisplayCounter={addDisplayCounter}
       />
     </>
   );
