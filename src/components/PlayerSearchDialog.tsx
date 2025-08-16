@@ -1,30 +1,21 @@
 import { useState } from "react";
 import { usePlayerContext } from "../data/contexts/players";
 import {
+  Button,
   Card,
   Dialog,
+  DialogActions,
   DialogContent,
   Grid,
   IconButton,
   InputBase,
 } from "@mui/material";
 import { Clear } from "@mui/icons-material";
-export default function TestPage() {
-  const [dialogopen, setDialogopen] = useState(true);
-  return (
-    <PlayerSearchDialog
-      open={dialogopen}
-      onExit={() => {
-        setDialogopen(false);
-      }}
-    />
-  );
-}
 interface MyDialogProps {
   open: boolean;
   onExit: () => void;
 }
-function PlayerSearchDialog({ open, onExit }: MyDialogProps) {
+export default function PlayerSearchDialog({ open, onExit }: MyDialogProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const playerDB = usePlayerContext();
   const allPlayers = playerDB.list;
@@ -32,7 +23,7 @@ function PlayerSearchDialog({ open, onExit }: MyDialogProps) {
     setSearchQuery(value);
   };
   return (
-    <Dialog open={open} onClose={() => onExit}>
+    <Dialog open={open} onClose={() => onExit()}>
       <DialogContent>
         <Grid container flexDirection={"column"} flexWrap="nowrap">
           <Grid p={2}>
@@ -72,6 +63,9 @@ function PlayerSearchDialog({ open, onExit }: MyDialogProps) {
           </Grid>
         </Grid>
       </DialogContent>
+      <DialogActions>
+        <Button onClick={onExit}>بستن</Button>
+      </DialogActions>
     </Dialog>
   );
 }
