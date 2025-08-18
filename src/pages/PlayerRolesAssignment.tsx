@@ -1,76 +1,62 @@
-import { Button, Card, Grid, Paper, Typography } from "@mui/material";
+import { Box, Button, Card, Fab, Grid, Paper, Typography } from "@mui/material";
 import { useGame } from "../data/contexts/game";
 import React, { useState } from "react";
 
-export default function PlayerRolesAssignmentPage() {
+export default function PlayerRolesAssignments() {
   const game = useGame();
-
   const [draggedRolePlayerId, setDraggedRolePlayerId] = useState<number | null>(
     null
   );
-  const setGame = () => {
-    if (!game.loadLastGame()) {
-      game.createNewGame({
-        name: "Test",
-        players: [
-          {
-            id: 1,
-            name: "Player 1",
-          },
-          {
-            id: 2,
-            name: "Player 2",
-          },
-          {
-            id: 3,
-            name: "Player 3",
-          },
-        ],
-        roles: [
-          {
-            id: 1,
-            name: "Role 1",
-            description: "",
-            side: "MAFIA",
-          },
-          {
-            id: 2,
-            name: "Role 2",
-            description: "",
-            side: "TOWN",
-          },
-          {
-            id: 3,
-            name: "Role 3",
-            description: "",
-            side: "TOWN",
-          },
-        ],
-      });
-    }
-  };
+
   const randomAssign = () => {
     if (game.currentGame) {
       game.assignRandomRolesToPlayers();
     }
   };
-  const handleDragRoleStart = (e: React.DragEvent, OriginPlayerId: number) => {
-    e.dataTransfer.setData("PlayerId", String(OriginPlayerId));
+
+  const handleDragRoleStartOnPc = (
+    e: React.DragEvent,
+    OriginPlayerId: number
+  ) => {
+    e.dataTransfer.setData("playerId", String(OriginPlayerId));
+    setDraggedRolePlayerId(OriginPlayerId);
   };
-  const handleDropRole = (e: React.DragEvent, targetPlayerId: number) => {
+
+  const handleDropRoleOnPc = (e: React.DragEvent, targetPlayerId: number) => {
     e.preventDefault();
     const firstPlayerId = Number(e.dataTransfer.getData("playerId"));
+    swapRoles(firstPlayerId, targetPlayerId);
+  };
 
-    if (!firstPlayerId || firstPlayerId === targetPlayerId) return;
+  const handleTouchStartOnMobile = (OriginPlayerId: number) => {
+    setDraggedRolePlayerId(OriginPlayerId);
+  };
+
+  const handleTouchEndOnMobile = (e: React.TouchEvent) => {
+    if (!draggedRolePlayerId) return;
+
+    const touch = e.changedTouches[0];
+    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+
+    if (!element) return;
+
+    const card = element.closest("[data-player-id]");
+    if (!card) return;
+
+    const targetPlayerId = Number(card.getAttribute("data-player-id"));
+    swapRoles(draggedRolePlayerId, targetPlayerId);
+  };
+
+  const swapRoles = (originPlayerId: number, targetPlayerId: number) => {
+    if (!originPlayerId || originPlayerId === targetPlayerId) return;
 
     const Players = [...game.getGamePlayers()];
-    const firstPlayer = Players.find((p) => p.id === firstPlayerId);
+    const firstPlayer = Players.find((p) => p.id === originPlayerId);
     const finalPlayer = Players.find((p) => p.id === targetPlayerId);
 
     if (!firstPlayer?.role || !finalPlayer?.role) return;
 
     [firstPlayer.role, finalPlayer.role] = [finalPlayer.role, firstPlayer.role];
-
     Players.forEach((p) => p.role && game.assignRoleToPlayer(p.id, p.role));
 
     setDraggedRolePlayerId(null);
@@ -78,14 +64,21 @@ export default function PlayerRolesAssignmentPage() {
 
   return (
     <Paper>
+      <Box p={1}>
+        <Button variant="outlined" onClick={randomAssign}>
+          <Typography>تصادفی</Typography>
+        </Button>
+      </Box>
       <Grid container spacing={1}>
         {game.getGamePlayers().map((p) => (
           <Grid p={1} size={{ xs: 12, sm: 6, lg: 4, xl: 3 }}>
             <Card
               key={p.id}
+              data-player-id={p.id}
               onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => handleDropRole(e, p.id)}
+              onDrop={(e) => handleDropRoleOnPc(e, p.id)}
               onDragEnd={() => setDraggedRolePlayerId(null)}
+              onTouchEnd={handleTouchEndOnMobile}
             >
               <Grid p={2} container>
                 <Grid flexGrow={1}>
@@ -94,10 +87,11 @@ export default function PlayerRolesAssignmentPage() {
                 <Grid>
                   <Typography
                     draggable={!!p.role}
-                    onDragStart={(e) => p.role && handleDragRoleStart(e, p.id)}
-                    onDragEnd={() => {
-                      setDraggedRolePlayerId(null);
-                    }}
+                    onDragStart={(e) =>
+                      p.role && handleDragRoleStartOnPc(e, p.id)
+                    }
+                    onDragEnd={() => setDraggedRolePlayerId(null)}
+                    onTouchStart={() => handleTouchStartOnMobile(p.id)}
                   >
                     {p.role?.name}
                   </Typography>
@@ -108,31 +102,13 @@ export default function PlayerRolesAssignmentPage() {
         ))}
       </Grid>
 
-      <Grid container p={1}>
-        <Grid flexGrow={1}>
-          <Button variant="contained">Next</Button>
-        </Grid>
-        <Grid flexGrow={0.05}>
-          <Button
-            variant="outlined"
-            onClick={() => {
-              setGame();
-            }}
-          >
-            Set Game
-          </Button>
-        </Grid>
+      <Box p={1}>
         <Grid>
-          <Button
-            variant="outlined"
-            onClick={() => {
-              randomAssign();
-            }}
-          >
-            Random
-          </Button>
+          <Fab variant="extended" color="primary" aria-label="add">
+            <Typography>گام بعدی</Typography>
+          </Fab>
         </Grid>
-      </Grid>
+      </Box>
     </Paper>
   );
 }
