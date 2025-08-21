@@ -14,6 +14,7 @@ import { Clear } from "@mui/icons-material";
 interface MyDialogProps {
   open: boolean;
   onExit: () => void;
+  onPlayerSelected?: (id: number) => void;
 }
 export default function PlayerSearchDialog({ open, onExit }: MyDialogProps) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -65,6 +66,7 @@ export default function PlayerSearchDialog({ open, onExit }: MyDialogProps) {
       </DialogContent>
       <DialogActions>
         <Button onClick={onExit}>بستن</Button>
+        <Button> اضافه کردن بازیکن جدید</Button>
       </DialogActions>
     </Dialog>
   );
