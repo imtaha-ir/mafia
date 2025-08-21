@@ -4,9 +4,15 @@ import RoleDetails from "../data/static/roles.data";
 import { Box, Button, Card, Grid } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Add } from "@mui/icons-material";
+import { useGame } from "../data/contexts/game";
 
 export default function RolesManagement() {
   const [selectedRoles,setSelectedRoles]=useState<Role[]> ([RoleDetails[0],RoleDetails[3],RoleDetails[5]])
+  const game=useGame();
+  const updateGameSettings=()=>{
+    if (game.currentGame)
+      game.currentGame.settings.roles=[...selectedRoles];
+  }
   const addRole=(r:Role) => {
     setSelectedRoles([...selectedRoles,r])
       };
@@ -31,7 +37,7 @@ export default function RolesManagement() {
         ))}
       </Box>
       <Box>
-        <h3>نقش‌های انتخاب‌شده</h3>
+        <h3>نقش‌های انتخاب‌شده : {selectedRoles.length} / 8</h3>
         {selectedRoles.map((role, index) => (
           <Box key={index} >
             <strong>{role.name}</strong> - {role.side}
@@ -41,6 +47,14 @@ export default function RolesManagement() {
 
           </Box>
         ))}
+
+        <Box>
+          <Button
+          disabled={selectedRoles.length!==8}
+           >مرحله بعد </Button>
+        </Box>
+
+
       </Box>
     </Grid>
 
