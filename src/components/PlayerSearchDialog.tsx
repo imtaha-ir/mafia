@@ -1,8 +1,22 @@
 import { useState } from "react";
 import { usePlayerContext } from "../data/contexts/players";
-import { Card, Grid, IconButton, InputBase } from "@mui/material";
+import {
+  Button,
+  Card,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  Grid,
+  IconButton,
+  InputBase,
+} from "@mui/material";
 import { Clear } from "@mui/icons-material";
-export default function PlayerSearchDialog() {
+interface MyDialogProps {
+  open: boolean;
+  onExit: () => void;
+  onPlayerSelected?: (id: number) => void;
+}
+export default function PlayerSearchDialog({ open, onExit }: MyDialogProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const playerDB = usePlayerContext();
   const allPlayers = playerDB.list;
@@ -10,47 +24,50 @@ export default function PlayerSearchDialog() {
     setSearchQuery(value);
   };
   return (
-    <Grid
-      container
-      flexDirection={"column"}
-      sx={{ position: "absolute", top: 0, bottom: 0, left: 0, right: 0 }}
-      flexWrap="nowrap"
-    >
-      <Grid p={2}>
-        <Card sx={{ p: "2px 4px", display: "flex", alignItems: "center" }}>
-          <InputBase
-            sx={{ ml: 1, flex: 1 }}
-            placeholder="جستجو..."
-            value={searchQuery}
-            onChange={(e) => handlechange(e.target.value)}
-          />
-          {searchQuery != "" && (
-            <IconButton
-              type="button"
-              aria-label="search"
-              onClick={() => {
-                setSearchQuery("");
-              }}
-            >
-              <Clear />
-            </IconButton>
-          )}
-        </Card>
-      </Grid>
-      <Grid flexGrow={1} p={2} sx={{ overflowY: "auto" }}>
-        <Grid container gap={1} flexDirection="column">
-          {allPlayers
-            .filter((player) => {
-              if (!searchQuery) return true;
-              return player.name.includes(searchQuery);
-            })
-            .map((player) => (
-              <Grid>
-                <Card sx={{ p: 1 }}>{player.name}</Card>
-              </Grid>
-            ))}
+    <Dialog open={open} onClose={() => onExit()}>
+      <DialogContent>
+        <Grid container flexDirection={"column"} flexWrap="nowrap">
+          <Grid p={2}>
+            <Card sx={{ p: "2px 4px", display: "flex", alignItems: "center" }}>
+              <InputBase
+                sx={{ ml: 1, flex: 1 }}
+                placeholder="جستجو..."
+                value={searchQuery}
+                onChange={(e) => handlechange(e.target.value)}
+              />
+              {searchQuery != "" && (
+                <IconButton
+                  type="button"
+                  aria-label="search"
+                  onClick={() => {
+                    setSearchQuery("");
+                  }}
+                >
+                  <Clear />
+                </IconButton>
+              )}
+            </Card>
+          </Grid>
+          <Grid flexGrow={1} p={2} sx={{ overflowY: "auto" }}>
+            <Grid container gap={1} flexDirection="column">
+              {allPlayers
+                .filter((player) => {
+                  if (!searchQuery) return true;
+                  return player.name.includes(searchQuery);
+                })
+                .map((player) => (
+                  <Grid>
+                    <Card sx={{ p: 1 }}>{player.name}</Card>
+                  </Grid>
+                ))}
+            </Grid>
+          </Grid>
         </Grid>
-      </Grid>
-    </Grid>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onExit}>بستن</Button>
+        <Button> اضافه کردن بازیکن جدید</Button>
+      </DialogActions>
+    </Dialog>
   );
 }
