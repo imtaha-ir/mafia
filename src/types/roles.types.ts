@@ -4,4 +4,5 @@ export interface Role  {
   name: string;
   side: RoleSide;
   description: string;
+  longDescription?: string;
 };
