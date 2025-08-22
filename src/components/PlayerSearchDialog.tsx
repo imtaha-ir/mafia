@@ -1,72 +1,113 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePlayerContext } from "../data/contexts/players";
 import {
+  Avatar,
   Button,
   Card,
   Dialog,
   DialogActions,
   DialogContent,
+  DialogTitle,
   Grid,
   IconButton,
   InputBase,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemText,
 } from "@mui/material";
-import { Clear } from "@mui/icons-material";
+import { Clear, Search } from "@mui/icons-material";
+import type { Player } from "../types/player.type";
 interface MyDialogProps {
   open: boolean;
   onExit: () => void;
-  onPlayerSelected?: (id: number) => void;
+  onPlayerSelected?: (p: Player) => void;
 }
-export default function PlayerSearchDialog({ open, onExit }: MyDialogProps) {
+export default function PlayerSearchDialog({
+  open,
+  onExit,
+  onPlayerSelected,
+}: MyDialogProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const playerDB = usePlayerContext();
   const allPlayers = playerDB.list;
+  const [playersToShow, setPlayersToShow] = useState<Player[]>(allPlayers);
+
   const handlechange = (value: any) => {
     setSearchQuery(value);
   };
+  const handlePlayerSelect = (p: Player) => {
+    if (onPlayerSelected) {
+      onPlayerSelected(p);
+    }
+    onExit();
+  };
+
+  useEffect(() => {
+    const found = allPlayers.filter((player) => {
+      if (!searchQuery) return true;
+      return player.name.includes(searchQuery);
+    });
+    setPlayersToShow([...found]);
+  }, [searchQuery]);
   return (
     <Dialog open={open} onClose={() => onExit()}>
-      <DialogContent>
+      <DialogTitle>
+        <Card sx={{ p: "2px 4px", display: "flex", alignItems: "center" }}>
+          <InputBase
+            sx={{ ml: 1, flex: 1 }}
+            placeholder="جستجو..."
+            value={searchQuery}
+            onChange={(e) => handlechange(e.target.value)}
+          />
+          {searchQuery != "" ? (
+            <IconButton
+              type="button"
+              aria-label="search"
+              onClick={() => {
+                setSearchQuery("");
+              }}
+            >
+              <Clear />
+            </IconButton>
+          ) : (
+            <IconButton type="button" aria-label="search">
+              <Search />
+            </IconButton>
+          )}
+        </Card>
+      </DialogTitle>
+      <DialogContent style={{ height: "50dvh" }}>
         <Grid container flexDirection={"column"} flexWrap="nowrap">
-          <Grid p={2}>
-            <Card sx={{ p: "2px 4px", display: "flex", alignItems: "center" }}>
-              <InputBase
-                sx={{ ml: 1, flex: 1 }}
-                placeholder="جستجو..."
-                value={searchQuery}
-                onChange={(e) => handlechange(e.target.value)}
-              />
-              {searchQuery != "" && (
-                <IconButton
-                  type="button"
-                  aria-label="search"
-                  onClick={() => {
-                    setSearchQuery("");
-                  }}
-                >
-                  <Clear />
-                </IconButton>
-              )}
-            </Card>
-          </Grid>
           <Grid flexGrow={1} p={2} sx={{ overflowY: "auto" }}>
-            <Grid container gap={1} flexDirection="column">
-              {allPlayers
-                .filter((player) => {
-                  if (!searchQuery) return true;
-                  return player.name.includes(searchQuery);
-                })
-                .map((player) => (
-                  <Grid>
-                    <Card sx={{ p: 1 }}>{player.name}</Card>
-                  </Grid>
-                ))}
-            </Grid>
+            <List sx={{ width: "100%" }}>
+              {playersToShow.map((player, pIndex) => (
+                <ListItem
+                  key={pIndex}
+                  sx={{ mt: 1, bgcolor: "background.paper" }}
+                  disablePadding
+                >
+                  <ListItemButton onClick={() => handlePlayerSelect(player)}>
+                    <ListItemAvatar>
+                      <Avatar />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={player.name}
+                      secondary={player.dateOfBirth}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
           </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
         <Button onClick={onExit}>بستن</Button>
-        <Button> اضافه کردن بازیکن جدید</Button>
+        <Button disabled={playersToShow.length > 0}>
+          اضافه کردن بازیکن جدید
+        </Button>
       </DialogActions>
     </Dialog>
   );
