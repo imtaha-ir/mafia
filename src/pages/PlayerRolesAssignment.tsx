@@ -1,6 +1,11 @@
-import { Box, Button, Card, Fab, Grid, Paper, Typography } from "@mui/material";
+import { Card, Grid, IconButton, Paper, Typography } from "@mui/material";
 import { useGame } from "../data/contexts/game";
-import React, { useState } from "react";
+import { useState } from "react";
+import {
+  ArrowDropDown,
+  ArrowDropUp,
+  FlipCameraAndroid,
+} from "@mui/icons-material";
 
 export default function PlayerRolesAssignments() {
   const game = useGame();
@@ -12,39 +17,6 @@ export default function PlayerRolesAssignments() {
     if (game.currentGame) {
       game.assignRandomRolesToPlayers();
     }
-  };
-
-  const handleDragRoleStartOnPc = (
-    e: React.DragEvent,
-    OriginPlayerId: number
-  ) => {
-    e.dataTransfer.setData("playerId", String(OriginPlayerId));
-    setDraggedRolePlayerId(OriginPlayerId);
-  };
-
-  const handleDropRoleOnPc = (e: React.DragEvent, targetPlayerId: number) => {
-    e.preventDefault();
-    const firstPlayerId = Number(e.dataTransfer.getData("playerId"));
-    swapRoles(firstPlayerId, targetPlayerId);
-  };
-
-  const handleTouchStartOnMobile = (OriginPlayerId: number) => {
-    setDraggedRolePlayerId(OriginPlayerId);
-  };
-
-  const handleTouchEndOnMobile = (e: React.TouchEvent) => {
-    if (!draggedRolePlayerId) return;
-
-    const touch = e.changedTouches[0];
-    const element = document.elementFromPoint(touch.clientX, touch.clientY);
-
-    if (!element) return;
-
-    const card = element.closest("[data-player-id]");
-    if (!card) return;
-
-    const targetPlayerId = Number(card.getAttribute("data-player-id"));
-    swapRoles(draggedRolePlayerId, targetPlayerId);
   };
 
   const swapRoles = (originPlayerId: number, targetPlayerId: number) => {
@@ -61,54 +33,61 @@ export default function PlayerRolesAssignments() {
 
     setDraggedRolePlayerId(null);
   };
+  const players = game.getGamePlayers();
 
   return (
     <Paper>
-      <Box p={1}>
-        <Button variant="outlined" onClick={randomAssign}>
-          <Typography>تصادفی</Typography>
-        </Button>
-      </Box>
+      <Grid
+        container
+        flexWrap={"nowrap"}
+        sx={{
+          position: "sticky",
+          top: 0,
+          left: 0,
+          right: 0,
+          bgcolor: "background.paper",
+          justifyContent: "center",
+        }}
+        onClick={randomAssign}
+        p={1}
+      >
+        <IconButton>
+          <FlipCameraAndroid />
+        </IconButton>
+      </Grid>
       <Grid container spacing={1}>
-        {game.getGamePlayers().map((p) => (
+        {game.getGamePlayers().map((p, pIndex) => (
           <Grid p={1} size={{ xs: 12, sm: 6, lg: 4, xl: 3 }}>
-            <Card
-              key={p.id}
-              data-player-id={p.id}
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => handleDropRoleOnPc(e, p.id)}
-              onDragEnd={() => setDraggedRolePlayerId(null)}
-              onTouchEnd={handleTouchEndOnMobile}
-            >
-              <Grid p={2} container>
+            <Card>
+              <Grid p={2} container alignItems={"center"}>
                 <Grid flexGrow={1}>
                   <Typography>{p.name}</Typography>
                 </Grid>
-                <Grid>
-                  <Typography
-                    draggable={!!p.role}
-                    onDragStart={(e) =>
-                      p.role && handleDragRoleStartOnPc(e, p.id)
-                    }
-                    onDragEnd={() => setDraggedRolePlayerId(null)}
-                    onTouchStart={() => handleTouchStartOnMobile(p.id)}
-                  >
-                    {p.role?.name}
-                  </Typography>
+
+                <Grid container alignItems={"center"}>
+                  <Typography>{p.role?.name}</Typography>
+                  <Grid container direction={"column"} ml={2}>
+                    <IconButton
+                      disabled={pIndex === 0}
+                      size="small"
+                      onClick={() => swapRoles(p.id, players[pIndex - 1].id)}
+                    >
+                      <ArrowDropUp />
+                    </IconButton>
+                    <IconButton
+                      disabled={pIndex === players.length - 1}
+                      onClick={() => swapRoles(p.id, players[pIndex + 1].id)}
+                      size="small"
+                    >
+                      <ArrowDropDown />
+                    </IconButton>
+                  </Grid>
                 </Grid>
               </Grid>
             </Card>
           </Grid>
         ))}
       </Grid>
-
-      <Box p={1}>
-        <Grid>
-          <Fab variant="extended" color="primary" aria-label="add">
-            <Typography>گام بعدی</Typography>
-          </Fab>
-        </Grid>
-      </Box>
     </Paper>
   );
 }
