@@ -90,8 +90,8 @@ export default function RolesManagement() {
   };
 
   useEffect(() => {
-    const suggest = suggestedRolls(playersCount);
-    setSelectedRoles(suggest);
+    const autoSuggestedList = suggestedRolls(playersCount);
+    setSelectedRoles(autoSuggestedList);
   }, [playersCount]);
 
   return (
