@@ -25,9 +25,9 @@ export default function RolesManagement() {
   };
   const suggestedRolls = (playersCount: number): Role[] => {
     const roles: Role[] = [];
-    const fixedRoles = ["پدرخوانده", "دکتر", "کارآگاه"];
-    fixedRoles.forEach((name) => {
-      const role = RoleDetails.find((r) => r.name === name);
+    const fixedRoles = [1, 7, 8];
+    fixedRoles.forEach((id) => {
+      const role = RoleDetails.find((r) => r.id === id);
       if (role) {
         roles.push(role);
       }
@@ -36,28 +36,28 @@ export default function RolesManagement() {
     let mafiaSpecialRoles = 0;
 
     if (playersCount >= 7) {
-      const sniper = RoleDetails.find((r) => r.name === "تک تیرانداز");
+      const sniper = RoleDetails.find((r) => r.id === 9);
       if (sniper) {
         roles.push(sniper);
       }
     }
 
     if (playersCount >= 8) {
-      const doctorLecter = RoleDetails.find((r) => r.name === "دکتر لکتر");
+      const doctorLecter = RoleDetails.find((r) => r.id === 3);
       if (doctorLecter) {
         roles.push(doctorLecter);
         mafiaSpecialRoles++;
       }
 
       if (playersCount >= 9) {
-        const strong = RoleDetails.find((r) => r.name === "جان سخت");
+        const strong = RoleDetails.find((r) => r.id === 10);
         if (strong) {
           roles.push(strong);
         }
       }
 
       if (playersCount >= 11) {
-        const natasha = RoleDetails.find((r) => r.name === "ناتاشا");
+        const natasha = RoleDetails.find((r) => r.id === 5);
         if (natasha) {
           roles.push(natasha);
           mafiaSpecialRoles++;
@@ -65,7 +65,7 @@ export default function RolesManagement() {
       }
 
       if (playersCount >= 15) {
-        const negotiator = RoleDetails.find((r) => r.name === "مذاکره کننده");
+        const negotiator = RoleDetails.find((r) => r.id === 4);
         if (negotiator) {
           roles.push(negotiator);
           mafiaSpecialRoles++;
@@ -74,14 +74,14 @@ export default function RolesManagement() {
     }
 
     const mafiaCount = Math.max(1, Math.ceil(playersCount / 3.5));
-    const simpleMafiaCount = RoleDetails.find((r) => r.name === "مافیا ساده");
+    const simpleMafiaCount = RoleDetails.find((r) => r.id === 2);
     if (simpleMafiaCount) {
       for (let i = 0; i < mafiaCount - 1 - mafiaSpecialRoles; i++) {
         roles.push(simpleMafiaCount);
       }
     }
 
-    const town = RoleDetails.find((r) => r.name === "شهروند ساده");
+    const town = RoleDetails.find((r) => r.id === 6);
     while (roles.length < playersCount && town) {
       roles.push(town);
     }
