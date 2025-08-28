@@ -14,7 +14,7 @@ type GameSettings = {
   roles: Role[];
 };
 
-type GameState = {
+export type GameState = {
   id: number;
   settings: GameSettings;
   state: {
