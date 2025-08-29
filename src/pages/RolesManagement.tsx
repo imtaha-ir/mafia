@@ -119,6 +119,7 @@ export default function RolesManagement() {
         ))}
       </List>
       <Box
+        dir="ltr"
         position={"fixed"}
         bottom={0}
         right={0}
@@ -126,9 +127,13 @@ export default function RolesManagement() {
         bgcolor={"background.paper"}
         p={1}
       >
-        <Typography variant="subtitle1">
-          نقش‌های انتخاب‌شده : {selectedRoles.length} / {playersCount}
-        </Typography>
+        <Grid container spacing={1}>
+          <Typography variant="subtitle1" style={{ marginLeft: "2%" }}>
+            {selectedRoles.length} / {playersCount}
+          </Typography>
+
+          <Typography>{": نقش های انتخاب شده "}</Typography>
+        </Grid>
       </Box>
       <NextFABButton
         onClick={saveAndGotoNextPage}
