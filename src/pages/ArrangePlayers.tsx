@@ -18,17 +18,23 @@ import { useEffect, useState } from "react";
 import type { Player } from "../types/player.type";
 import { useGame } from "../data/contexts/game";
 import { useScreen } from "../data/contexts/screen";
-import { Add, Delete } from "@mui/icons-material";
+import { Add, Delete, PlayArrow } from "@mui/icons-material";
+import NextFABButton from "../components/NextFABButton";
+import { Pages } from "../Routes";
+import { useNavigate } from "react-router-dom";
 
 export default function ArrangePlayers() {
   const game = useGame();
   const screen = useScreen();
+  const navigate = useNavigate();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [arrangedPlayers, setArrangedPlayer] = useState<Player[]>([]);
   const [gameName, setGameName] = useState<string>("");
 
   function addPlayerToGame(newPlayer: Player): void {
-    const addedPlayer = arrangedPlayers.find((player) => player.id === newPlayer.id);
+    const addedPlayer = arrangedPlayers.find(
+      (player) => player.id === newPlayer.id
+    );
     if (addedPlayer) {
       screen.showMessage("بازیکن قبلا انتخاب شده");
     } else {
@@ -43,17 +49,14 @@ export default function ArrangePlayers() {
   }
 
   function getDateAndTime() {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
-    const day = currentDate.getDate().toString().padStart(2, "0");
-    const hours = currentDate.getHours().toString().padStart(2, "0");
-    const minuters = currentDate.getMinutes().toString().padStart(2, "0");
-    return `${hours}:${minuters} ${year}-${month}-${day}`;
+    return new Date().toLocaleString("FA-ir", {
+      dateStyle: "short",
+      timeStyle: "short",
+    });
   }
 
   function isEverythingOk() {
-    if (gameName.trim() !== "" && arrangedPlayers.length > 4) {
+    if (gameName.trim() !== "" && arrangedPlayers.length >= 4) {
       return true;
     } else {
       return false;
@@ -61,14 +64,16 @@ export default function ArrangePlayers() {
   }
   function saveAndGotoNextPage() {
     if (isEverythingOk()) {
-      game.createNewGame();
-      // TODO: change game name to {gameName}
-      game.addPlayerToCurrentGame(arrangedPlayers);
-      // TODO: navigate to next page
+      game.createNewGame({
+        name: gameName,
+        players: arrangedPlayers,
+        roles: [],
+      });
+      navigate(Pages.ArrangeRoles());
     } else if (gameName.trim() === "") {
       screen.showMessage("یک نام برای بازی بنویسید.");
     } else if (arrangedPlayers.length < 5) {
-      screen.showMessage("بازی با حداقل ۵ بازیکن شروع میشه!");
+      screen.showMessage("بازی با حداقل ۴ بازیکن شروع میشه!");
     }
   }
   useEffect(() => {
@@ -97,7 +102,11 @@ export default function ArrangePlayers() {
             key={pIndex}
             sx={{ mt: 1, bgcolor: "background.paper" }}
             secondaryAction={
-              <IconButton edge="end" aria-label="delete" onClick={() => removePlayerFromGame(pIndex)}>
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                onClick={() => removePlayerFromGame(pIndex)}
+              >
                 <Delete />
               </IconButton>
             }
@@ -106,7 +115,10 @@ export default function ArrangePlayers() {
             <ListItemAvatar>
               <Avatar />
             </ListItemAvatar>
-            <ListItemText primary={player.name} secondary={player.dateOfBirth} />
+            <ListItemText
+              primary={player.name}
+              secondary={player.dateOfBirth}
+            />
           </ListItem>
         ))}
         <ListItem disablePadding sx={{ mt: 1, bgcolor: "background.paper" }}>
@@ -123,6 +135,11 @@ export default function ArrangePlayers() {
           </ListItemButton>
         </ListItem>
       </List>
+      <NextFABButton
+        icon={PlayArrow}
+        caption="ادامه"
+        onClick={saveAndGotoNextPage}
+      />
       <PlayerSearchDialog
         open={dialogOpen}
         onExit={() => {

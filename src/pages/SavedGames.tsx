@@ -1,93 +1,85 @@
-import { Box, Button, Card, CardContent, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+} from "@mui/material";
 import { useGame, type GameState } from "../data/contexts/game";
+import { Delete } from "@mui/icons-material";
+import { useScreen } from "../data/contexts/screen";
+import { useNavigate } from "react-router-dom";
+import { Pages } from "../Routes";
 
-export default function SavedGames(){
-    const game=useGame()
-    const gameList =game.listGames()
-    const fakeGames:GameState[]=[
-       {
-         id: 1,
-         lastPlay: new Date("2025-08-27T14:30:00").getTime(),
-         settings: {
-           name: "بازی اول ",
-           players: [{ name: "Nazanin", id: 1 }],
-           roles: [{
-             name: "mafia", id: 1,
-             side: "MAFIA",
-             min: 0,
-             max: 0,
-             description: ""
-           }]
-         },
-        
-         state: {
-           status: "NEW",
-           gameCycleStep: undefined
-         },
-         logs: []
-       },
+export default function SavedGames() {
+  const game = useGame();
+  const navigate = useNavigate();
+  const gameList = game.listGames();
+  const screen = useScreen();
+  const getPlayersName = (g: GameState) => {
+    return (
+      `${g.settings.players?.length ?? 0} نفر: ` +
+      g.settings.players?.map((p) => p.name).join(" ,")
+    );
+  };
+  const handleDelete = (g: GameState) => {
+    screen.confirm(
+      `بازی ${g.settings.name} حذف و حافظه مربوط به آن را آزاد کنم؟`,
+      "حذف بازی",
+      () => {
+        game.deleteGame(g.id);
+      }
+    );
+  };
+  const handleClick = (g: GameState) => {
+    screen.confirm(
+      `بازی ${g.settings.name} بارگذاری شود؟`,
+      "بارگذاری بازی",
+      () => {
+        game.loadGame(g.id);
+        navigate(Pages.ArrangePlayers());
+      }
+    );
+  };
 
-  
-            {
-         id: 2,
-         lastPlay: new Date("2025-05-27T17:30:00").getTime(),
-         settings: {
-           name: "بازی دوم ",
-           players: [{ name: "Taha", id: 2 }],
-           roles: [{
-             name: "mafia", id: 1,
-             side: "MAFIA",
-             min: 0,
-             max: 0,
-             description: ""
-           }]
-         },
-       
-         state: {
-           status: "NEW",
-           gameCycleStep: undefined
-         },
-         logs: []
-       },
+  return gameList.length === 0 ? (
+    <Typography>هنوز هیچ بازی‌ای ذخیره نشده.</Typography>
+  ) : (
+    <List>
+      {gameList.map((savedGame, gIndex) => (
+        <ListItem
+          disablePadding
+          key={savedGame.id}
+          sx={{ mt: 1, bgcolor: "background.paper" }}
+          secondaryAction={
+            <IconButton
+              edge="end"
+              aria-label="delete"
+              onClick={() => handleDelete(savedGame)}
+            >
+              <Delete />
+            </IconButton>
+          }
+        >
+          <ListItemButton onClick={() => handleClick(savedGame)}>
+            <ListItemIcon>
+              <Avatar>{gIndex + 1}</Avatar>
+            </ListItemIcon>
 
-  
-    
-
-    ]
-   
-    return ( 
-     <Box >
-      <Typography >
-        بازی‌های ذخیره‌شده
-      </Typography>
-      
-      {fakeGames.length === 0 ? (
-        <Typography >
-          هنوز هیچ بازی‌ای ذخیره نشده.
-        </Typography>
-        
-      ) : (
-        fakeGames.map((savedGame) => (
-          <Card key={savedGame.id} >
-            <CardContent>
-              <Typography >{savedGame.settings.name}</Typography>
-              <Typography >
-                تاریخ ذخیره: {new Date(savedGame.lastPlay).toLocaleString("fa-IR")}
-
-              </Typography>
-            <Box>
-            <Button
-               
-                onClick={() => game.loadGame(savedGame.id)}
-              >
-                ادامه بازی
-              </Button></Box>
-            </CardContent>
-          </Card>
-        ))
-      )}
-    </Box>
+            <ListItemText
+              primary={savedGame.settings.name}
+              secondary={getPlayersName(savedGame)}
+            />
+          </ListItemButton>
+        </ListItem>
+      ))}
+    </List>
   );
-
-
 }

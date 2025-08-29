@@ -14,9 +14,11 @@ import imgModeratorGuid from "../assets/mafia-moderator-guid.png";
 import imgRolesGuid from "../assets/mafia-roles-guid.png";
 import imgFAQ from "../assets/mafia-faq.png";
 import { Loop, SmartToy } from "@mui/icons-material";
+import { useGame } from "../data/contexts/game";
 
 export default function StartPage() {
   const navigate = useNavigate();
+  const game = useGame();
 
   return (
     <Grid container p={2} direction="column">
@@ -26,10 +28,12 @@ export default function StartPage() {
       <Grid container gap={2} mt={2} flexDirection={"column"}>
         <Grid>
           <MenuCard
-            description="اجرای آخرین بازی انجام شده"
+            description="بارگذاری بازی‌های ذخیره شده"
             icon={() => <Loop style={{ width: 100, height: 50 }} />}
             title="بازی دوباره"
-            onClick={() => {}}
+            onClick={() => {
+              navigate(Pages.LoadGame());
+            }}
           />
         </Grid>
         <Grid>
@@ -37,7 +41,10 @@ export default function StartPage() {
             description="بازی‌های ذخیره شده یا طراحی بازی جدید از ابتدا"
             icon={() => <SmartToy style={{ width: 100, height: 50 }} />}
             title="بازی جدید"
-            onClick={() => {}}
+            onClick={() => {
+              game.currentGame = null;
+              navigate(Pages.ArrangePlayers());
+            }}
           />
         </Grid>
       </Grid>

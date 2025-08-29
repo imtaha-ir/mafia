@@ -4,6 +4,8 @@ import RoleDetails from "../data/static/roles.data";
 import { Box, Grid, List, Typography } from "@mui/material";
 import { useGame } from "../data/contexts/game";
 import RoleManagementListItem from "../components/RoleManagementListItem";
+import NextFABButton from "../components/NextFABButton";
+import { PlayArrow } from "@mui/icons-material";
 
 export default function RolesManagement() {
   const [selectedRoles, setSelectedRoles] = useState<Role[]>([RoleDetails[0]]);
@@ -116,10 +118,10 @@ export default function RolesManagement() {
         p={1}
       >
         <Typography variant="subtitle1">
-          {" "}
           نقش‌های انتخاب‌شده : {selectedRoles.length} / {playersCount}
         </Typography>
       </Box>
+      <NextFABButton icon={PlayArrow} caption="ادامه" />
     </Grid>
   );
 }
