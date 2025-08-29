@@ -15,6 +15,7 @@ interface RoleManagementListItemProps {
   key: any;
   onDelete: (role: Role) => void;
   onClick: (role: Role) => void;
+  onSelectedCard: boolean;
 }
 
 export default function RoleManagementListItem({
@@ -23,10 +24,13 @@ export default function RoleManagementListItem({
   key,
   onDelete,
   onClick,
+  onSelectedCard,
 }: RoleManagementListItemProps) {
   const count = selectedRoles.filter((r) => r.id === role.id).length;
   const disableDelete = count <= role.min;
   const disableAdd = count >= role.max;
+  const addRollLimit = count >= role.max || onSelectedCard;
+  const selectedPlayerOpacity = disableAdd || !disableDelete;
   return (
     <ListItem
       key={key}
@@ -43,7 +47,11 @@ export default function RoleManagementListItem({
       }
       disablePadding
     >
-      <ListItemButton onClick={() => onClick(role)} disabled={disableAdd}>
+      <ListItemButton
+        onClick={() => onClick(role)}
+        disabled={addRollLimit}
+        style={selectedPlayerOpacity ? { opacity: 0.9 } : { opacity: 0.2 }}
+      >
         <ListItemAvatar sx={{ mr: 2, ml: -1 }}>
           <img src={CharachterImages[role.charachterIndex ?? 0]} height={64} />
         </ListItemAvatar>
