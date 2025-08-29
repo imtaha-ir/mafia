@@ -11,6 +11,7 @@ import TestPage from "./pages/TestPage";
 import RolesManagement from "./pages/RolesManagement";
 import SavedGames from "./pages/SavedGames";
 import ArrangePlayers from "./pages/ArrangePlayers";
+import RoleVitrine from "./pages/RoleVitrine";
 
 export const Pages = {
   StartPage: () => ({ pathname: "/", element: StartPage, title: "مافیا" }),
@@ -68,6 +69,11 @@ export const Pages = {
     pathname: "/arrange-roles",
     element: RolesManagement,
     title: "Arrange Roles",
+  }),
+  RolesVitrine: () => ({
+    pathname: "/roles-vitrine",
+    element: RoleVitrine,
+    title: "Roles Vitrine",
   }),
   OpeningDay: () => ({
     pathname: "/game/opening",
