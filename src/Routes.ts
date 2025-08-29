@@ -69,6 +69,11 @@ export const Pages = {
     element: RolesManagement,
     title: "Arrange Roles",
   }),
+  OpeningDay: () => ({
+    pathname: "/game/opening",
+    element: () => null,
+    title: "Opening Day",
+  }),
 };
 
 const routes = Object.values(Pages);
