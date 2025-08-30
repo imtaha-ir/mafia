@@ -16,7 +16,8 @@ export default function RolesManagement() {
   const navigate = useNavigate();
   const saveAndGotoNextPage = () => {
     if (game.currentGame) game.currentGame.settings.roles = [...selectedRoles];
-    navigate(Pages.RolesVitrine());
+    game.saveCurrentGame();
+    navigate(Pages.PlayerRolesAssignments());
   };
   const addRole = (r: Role) => {
     setSelectedRoles([...selectedRoles, r]);

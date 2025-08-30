@@ -12,6 +12,7 @@ import RolesManagement from "./pages/RolesManagement";
 import SavedGames from "./pages/SavedGames";
 import ArrangePlayers from "./pages/ArrangePlayers";
 import RoleVitrine from "./pages/RoleVitrine";
+import PlayerRolesAssignments from "./pages/PlayerRolesAssignment";
 
 export const Pages = {
   StartPage: () => ({ pathname: "/", element: StartPage, title: "مافیا" }),
@@ -68,6 +69,11 @@ export const Pages = {
   ArrangeRoles: () => ({
     pathname: "/arrange-roles",
     element: RolesManagement,
+    title: "Arrange Roles",
+  }),
+  PlayerRolesAssignments: () => ({
+    pathname: "/player-roles-assignment",
+    element: PlayerRolesAssignments,
     title: "Arrange Roles",
   }),
   RolesVitrine: () => ({

@@ -1,6 +1,5 @@
 import { Card, Grid, IconButton, Paper, Typography } from "@mui/material";
 import { useGame } from "../data/contexts/game";
-import { useState } from "react";
 import {
   ArrowDropDown,
   ArrowDropUp,
@@ -9,9 +8,6 @@ import {
 
 export default function PlayerRolesAssignments() {
   const game = useGame();
-  const [draggedRolePlayerId, setDraggedRolePlayerId] = useState<number | null>(
-    null
-  );
 
   const randomAssign = () => {
     if (game.currentGame) {
@@ -30,8 +26,6 @@ export default function PlayerRolesAssignments() {
 
     [firstPlayer.role, finalPlayer.role] = [finalPlayer.role, firstPlayer.role];
     Players.forEach((p) => p.role && game.assignRoleToPlayer(p.id, p.role));
-
-    setDraggedRolePlayerId(null);
   };
   const players = game.getGamePlayers();
 
