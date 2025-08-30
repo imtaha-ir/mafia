@@ -6,13 +6,17 @@ import { useGame } from "../data/contexts/game";
 import RoleManagementListItem from "../components/RoleManagementListItem";
 import NextFABButton from "../components/NextFABButton";
 import { PlayArrow } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import { Pages } from "../Routes";
 
 export default function RolesManagement() {
   const [selectedRoles, setSelectedRoles] = useState<Role[]>([RoleDetails[0]]);
-  const [playersCount, setPlayerCount] = useState<number>(8);
   const game = useGame();
-  const updateGameSettings = () => {
+  let playersCount = game.currentGame?.settings.players.length;
+  const navigate = useNavigate();
+  const saveAndGotoNextPage = () => {
     if (game.currentGame) game.currentGame.settings.roles = [...selectedRoles];
+    navigate(Pages.RolesVitrine());
   };
   const addRole = (r: Role) => {
     setSelectedRoles([...selectedRoles, r]);
@@ -91,9 +95,13 @@ export default function RolesManagement() {
     return roles;
   };
 
+  const addRollLimit = playersCount === selectedRoles.length;
+
   useEffect(() => {
-    const autoSuggestedList = suggestedRolls(playersCount);
-    setSelectedRoles(autoSuggestedList);
+    if (playersCount) {
+      const autoSuggestedList = suggestedRolls(playersCount);
+      setSelectedRoles(autoSuggestedList);
+    }
   }, [playersCount]);
 
   return (
@@ -106,10 +114,12 @@ export default function RolesManagement() {
             key={rIndex}
             onClick={addRole}
             onDelete={removeRole}
+            onSelectedCard={addRollLimit}
           />
         ))}
       </List>
       <Box
+        dir="ltr"
         position={"fixed"}
         bottom={0}
         right={0}
@@ -117,11 +127,19 @@ export default function RolesManagement() {
         bgcolor={"background.paper"}
         p={1}
       >
-        <Typography variant="subtitle1">
-          نقش‌های انتخاب‌شده : {selectedRoles.length} / {playersCount}
-        </Typography>
+        <Grid container spacing={1}>
+          <Typography variant="subtitle1" style={{ marginLeft: "2%" }}>
+            {selectedRoles.length} / {playersCount}
+          </Typography>
+
+          <Typography>{": نقش های انتخاب شده "}</Typography>
+        </Grid>
       </Box>
-      <NextFABButton icon={PlayArrow} caption="ادامه" />
+      <NextFABButton
+        onClick={saveAndGotoNextPage}
+        icon={PlayArrow}
+        caption="ادامه"
+      />
     </Grid>
   );
 }
