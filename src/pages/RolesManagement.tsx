@@ -108,7 +108,16 @@ export default function RolesManagement() {
   const addRollLimit = playersCount === selectedRoles.length;
 
   useEffect(() => {
-    if (playersCount) {
+    if (game.currentGame?.settings.roles) {
+      setSelectedRoles(game.currentGame.settings.roles);
+    } else if (playersCount) {
+      const autoSuggestedList = suggestedRolls(playersCount);
+      setSelectedRoles(autoSuggestedList);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (playersCount && !game.currentGame?.settings.roles?.length) {
       const autoSuggestedList = suggestedRolls(playersCount);
       setSelectedRoles(autoSuggestedList);
     }
