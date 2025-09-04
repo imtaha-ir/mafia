@@ -8,16 +8,25 @@ import NextFABButton from "../components/NextFABButton";
 import { PlayArrow } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { Pages } from "../Routes";
+import { useScreen } from "../data/contexts/screen";
 
 export default function RolesManagement() {
   const [selectedRoles, setSelectedRoles] = useState<Role[]>([RoleDetails[0]]);
   const game = useGame();
+  const screen = useScreen();
   let playersCount = game.currentGame?.settings.players.length;
   const navigate = useNavigate();
   const saveAndGotoNextPage = () => {
     if (game.currentGame) game.currentGame.settings.roles = [...selectedRoles];
     game.saveCurrentGame();
-    navigate(Pages.PlayerRolesAssignments());
+    if (
+      game.currentGame?.settings.roles.length ===
+      game.currentGame?.settings.players.length
+    ) {
+      navigate(Pages.PlayerRolesAssignments());
+    } else {
+      screen.showMessage("تعداد نقشها با تعداد بازیکنان برابر نیست !", "مافیا");
+    }
   };
   const addRole = (r: Role) => {
     setSelectedRoles([...selectedRoles, r]);
