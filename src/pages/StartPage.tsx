@@ -6,6 +6,7 @@ import {
   CardMedia,
   Grid,
   Typography,
+  
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Pages } from "../Routes";
@@ -13,9 +14,9 @@ import imgHowToPlay from "../assets/mafia-how-to-play.png";
 import imgModeratorGuid from "../assets/mafia-moderator-guid.png";
 import imgRolesGuid from "../assets/mafia-roles-guid.png";
 import imgFAQ from "../assets/mafia-faq.png";
-import { Loop, SmartToy } from "@mui/icons-material";
+import { Loop, SmartToy} from "@mui/icons-material";
 import { useGame } from "../data/contexts/game";
-
+import SettingsIcon from '@mui/icons-material/Settings';
 export default function StartPage() {
   const navigate = useNavigate();
   const game = useGame();
@@ -79,6 +80,14 @@ export default function StartPage() {
           image={imgFAQ}
           onClick={() => {
             navigate(Pages.FAQPage());
+          }}
+        />
+         <MenuCard
+          title="تنظیمات "
+          description="قبل از اینکه وارد دنیای بازی بشی برای بازی بهتر یه سری به تنظیمات بزن "
+          icon={() => <SettingsIcon style={{ width: 100, height: 50 }} />}
+          onClick={() => {
+            navigate(Pages.SettingsPage());
           }}
         />
       </Grid>
