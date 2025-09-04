@@ -6,20 +6,21 @@ import Button from "@mui/material/Button";
 import { usePlayerContext } from "../../data/contexts/players";
 import { useState } from "react";
 import { useScreen } from "../../data/contexts/screen";
+import { convertNumbers } from "../../utils/helper";
 
 export default function AddPlayerPage() {
   const playerDB = usePlayerContext();
   const [name, setName] = useState<string>();
-  const [yearOfBirth, setYearOfBirth] = useState<number>(1360);
+  const [yearOfBirth, setYearOfBirth] = useState<string>();
   const screen = useScreen();
 
   const handleClick = () => {
     if (name) {
-      const addedPlayer = playerDB.add({ name });
+      const addedPlayer = playerDB.add({ name, dateOfBirth: yearOfBirth });
       if (addedPlayer) {
-        screen.showMessage("ذخیره شد");
         setName("");
-        setYearOfBirth(1360);
+        setYearOfBirth("");
+        screen.showMessage("ذخیره شد");
       } else {
         screen.showMessage("بازیکن قبلا ثبت شده است");
       }
@@ -34,22 +35,20 @@ export default function AddPlayerPage() {
 
         <Stack spacing={1}>
           <TextField
-            id="outlined-basic"
             label="نام و نام خوانوادگی"
             variant="outlined"
             value={name}
             onChange={(e) => {
-              setName(e.target.value);
+              setName(convertNumbers("fa", e.target.value));
             }}
           />
 
           <TextField
-            id="outlined-basic"
             variant="outlined"
-            type="number"
+            label="سال تولد"
             value={yearOfBirth}
             onChange={(e) => {
-              setYearOfBirth(Number(e.target.value));
+              setYearOfBirth(convertNumbers("fa", e.target.value));
             }}
           />
         </Stack>

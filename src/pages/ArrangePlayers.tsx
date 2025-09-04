@@ -22,6 +22,7 @@ import { Add, Delete, PlayArrow } from "@mui/icons-material";
 import NextFABButton from "../components/NextFABButton";
 import { Pages } from "../Routes";
 import { useNavigate } from "react-router-dom";
+import { convertNumbers, getAge } from "../utils/helper";
 
 export default function ArrangePlayers() {
   const game = useGame();
@@ -93,30 +94,32 @@ export default function ArrangePlayers() {
               label="نام بازی"
               value={gameName}
               onChange={(e) => {
-                setGameName(e.target.value);
+                setGameName(convertNumbers("fa", e.target.value));
               }}
             />
           </Stack>
         </Card>
       </Box>
       <List sx={{ width: "100%" }}>
-        {arrangedPlayers.map((player, pIndex) => (
-          <ListItem
-            key={pIndex}
-            sx={{ mt: 1, bgcolor: "background.paper" }}
-            secondaryAction={
-              <IconButton edge="end" aria-label="delete" onClick={() => removePlayerFromGame(pIndex)}>
-                <Delete />
-              </IconButton>
-            }
-          >
-            <ListItemIcon>{pIndex + 1}</ListItemIcon>
-            <ListItemAvatar>
-              <Avatar />
-            </ListItemAvatar>
-            <ListItemText primary={player.name} secondary={player.dateOfBirth} />
-          </ListItem>
-        ))}
+        {arrangedPlayers.map((player, pIndex) => {
+          return (
+            <ListItem
+              key={pIndex}
+              sx={{ mt: 1, bgcolor: "background.paper" }}
+              secondaryAction={
+                <IconButton edge="end" aria-label="delete" onClick={() => removePlayerFromGame(pIndex)}>
+                  <Delete />
+                </IconButton>
+              }
+            >
+              <ListItemIcon>{pIndex + 1}</ListItemIcon>
+              <ListItemAvatar>
+                <Avatar />
+              </ListItemAvatar>
+              <ListItemText primary={player.name} secondary={player.dateOfBirth ? convertNumbers("fa", String(getAge(player.dateOfBirth))) : ""} />
+            </ListItem>
+          );
+        })}
         <ListItem disablePadding sx={{ mt: 1, bgcolor: "background.paper" }}>
           <ListItemButton
             onClick={() => {
