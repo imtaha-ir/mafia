@@ -1,13 +1,35 @@
-import { Card, Grid, IconButton, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  Grid,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Paper,
+  Typography,
+} from "@mui/material";
 import { useGame } from "../data/contexts/game";
 import {
   ArrowDropDown,
   ArrowDropUp,
   FlipCameraAndroid,
+  PlayArrow,
 } from "@mui/icons-material";
+import { useEffect } from "react";
+import NextFABButton from "../components/NextFABButton";
+import { useNavigate } from "react-router-dom";
+import { Pages } from "../Routes";
 
 export default function PlayerRolesAssignments() {
   const game = useGame();
+  const navigate = useNavigate();
+
+  const handleGotoNextButton = () => {
+    navigate(Pages.RolesVitrine());
+  };
 
   const randomAssign = () => {
     if (game.currentGame) {
@@ -28,12 +50,13 @@ export default function PlayerRolesAssignments() {
     Players.forEach((p) => p.role && game.assignRoleToPlayer(p.id, p.role));
   };
   const players = game.getGamePlayers();
+  useEffect(() => {
+    randomAssign();
+  }, []);
 
   return (
     <Paper>
-      <Grid
-        container
-        flexWrap={"nowrap"}
+      <ListItemButton
         sx={{
           position: "sticky",
           top: 0,
@@ -43,45 +66,56 @@ export default function PlayerRolesAssignments() {
           justifyContent: "center",
         }}
         onClick={randomAssign}
-        p={1}
       >
-        <IconButton>
-          <FlipCameraAndroid />
-        </IconButton>
-      </Grid>
-      <Grid container spacing={1}>
-        {game.getGamePlayers().map((p, pIndex) => (
-          <Grid p={1} size={{ xs: 12, sm: 6, lg: 4, xl: 3 }}>
-            <Card>
-              <Grid p={2} container alignItems={"center"}>
-                <Grid flexGrow={1}>
-                  <Typography>{p.name}</Typography>
-                </Grid>
+        <ListItemIcon>
+          <IconButton disableRipple>
+            <FlipCameraAndroid />
+          </IconButton>
+        </ListItemIcon>
+      </ListItemButton>
+      <List>
+        {players.map((p, pIndex) => (
+          <ListItem
+            sx={{
+              mt: 1,
+              bgcolor: "background.paper",
+            }}
+            key={p.id}
+          >
+            <ListItemText primary={p.name} />
 
-                <Grid container alignItems={"center"}>
-                  <Typography>{p.role?.name}</Typography>
-                  <Grid container direction={"column"} ml={2}>
-                    <IconButton
-                      disabled={pIndex === 0}
-                      size="small"
-                      onClick={() => swapRoles(p.id, players[pIndex - 1].id)}
-                    >
-                      <ArrowDropUp />
-                    </IconButton>
-                    <IconButton
-                      disabled={pIndex === players.length - 1}
-                      onClick={() => swapRoles(p.id, players[pIndex + 1].id)}
-                      size="small"
-                    >
-                      <ArrowDropDown />
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Card>
-          </Grid>
+            <Box display="flex" alignItems="center">
+              <Typography mr={2}>{p.role?.name}</Typography>
+
+              <Box display={"flex"} flexDirection={"column"}>
+                <ListItemIcon>
+                  <IconButton
+                    disabled={pIndex === 0}
+                    size="small"
+                    onClick={() => swapRoles(p.id, players[pIndex - 1].id)}
+                  >
+                    <ArrowDropUp />
+                  </IconButton>
+                </ListItemIcon>
+                <ListItemIcon>
+                  <IconButton
+                    disabled={pIndex === players.length - 1}
+                    size="small"
+                    onClick={() => swapRoles(p.id, players[pIndex + 1].id)}
+                  >
+                    <ArrowDropDown />
+                  </IconButton>
+                </ListItemIcon>
+              </Box>
+            </Box>
+          </ListItem>
         ))}
-      </Grid>
+      </List>
+      <NextFABButton
+        caption="ادامه"
+        icon={PlayArrow}
+        onClick={handleGotoNextButton}
+      />
     </Paper>
   );
 }
