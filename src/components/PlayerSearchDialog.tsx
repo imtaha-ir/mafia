@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import { Clear, Search } from "@mui/icons-material";
 import type { Player } from "../types/player.type";
+import AddPlayerDialog from "./AddPlayerDialog";
 interface MyDialogProps {
   open: boolean;
   onExit: () => void;
@@ -43,7 +44,7 @@ export default function PlayerSearchDialog({
     }
     onExit();
   };
-
+  const [addPlayerOpen, setAddPlayerOpen] = useState<boolean>(false);
   useEffect(() => {
     const found = allPlayers.filter((player) => {
       if (!searchQuery) return true;
@@ -102,10 +103,16 @@ export default function PlayerSearchDialog({
             </List>
           </Grid>
         </Grid>
+        <AddPlayerDialog open={addPlayerOpen} setOpen={setAddPlayerOpen} />
       </DialogContent>
       <DialogActions>
         <Button onClick={onExit}>بستن</Button>
-        <Button disabled={playersToShow.length > 0}>
+        <Button
+          disabled={playersToShow.length > 0}
+          onClick={() => {
+            setAddPlayerOpen(!addPlayerOpen);
+          }}
+        >
           اضافه کردن بازیکن جدید
         </Button>
       </DialogActions>
