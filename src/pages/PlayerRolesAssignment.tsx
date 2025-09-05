@@ -60,9 +60,6 @@ export default function PlayerRolesAssignments() {
       <ListSubheader>
         <ListItemButton
           sx={{
-            position: "sticky",
-            top: 0,
-            bgcolor: "background.paper",
             justifyContent: "center",
           }}
           onClick={randomAssign}
