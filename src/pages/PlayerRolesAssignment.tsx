@@ -8,6 +8,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  ListSubheader,
   Paper,
   Typography,
 } from "@mui/material";
@@ -55,39 +56,39 @@ export default function PlayerRolesAssignments() {
   }, []);
 
   return (
-    <Paper>
-      <ListItemButton
-        sx={{
-          position: "sticky",
-          top: 0,
-          left: 0,
-          right: 0,
-          bgcolor: "background.paper",
-          justifyContent: "center",
-        }}
-        onClick={randomAssign}
-      >
-        <ListItemIcon>
-          <IconButton disableRipple>
-            <FlipCameraAndroid />
-          </IconButton>
-        </ListItemIcon>
-      </ListItemButton>
-      <List>
-        {players.map((p, pIndex) => (
-          <ListItem
-            sx={{
-              mt: 1,
-              bgcolor: "background.paper",
-            }}
-            key={p.id}
-          >
-            <ListItemText primary={p.name} />
+    <List sx={{ mb: 7 }}>
+      <ListSubheader>
+        <ListItemButton
+          sx={{
+            position: "sticky",
+            top: 0,
+            bgcolor: "background.paper",
+            justifyContent: "center",
+          }}
+          onClick={randomAssign}
+        >
+          <ListItemIcon>
+            <IconButton disableRipple>
+              <FlipCameraAndroid />
+            </IconButton>
+          </ListItemIcon>
+        </ListItemButton>
+      </ListSubheader>
 
-            <Box display="flex" alignItems="center">
+      {players.map((p, pIndex) => (
+        <ListItem
+          key={p.id}
+          sx={{
+            mt: 1,
+            bgcolor: "background.paper",
+            borderRadius: 2,
+            minHeight: 70,
+          }}
+          secondaryAction={
+            <Box display="flex" alignItems="center" mr={-3}>
               <Typography mr={2}>{p.role?.name}</Typography>
 
-              <Box display={"flex"} flexDirection={"column"}>
+              <Box display="flex" flexDirection="column">
                 <ListItemIcon>
                   <IconButton
                     disabled={pIndex === 0}
@@ -108,14 +109,17 @@ export default function PlayerRolesAssignments() {
                 </ListItemIcon>
               </Box>
             </Box>
-          </ListItem>
-        ))}
-      </List>
+          }
+        >
+          <ListItemText primary={p.name} />
+        </ListItem>
+      ))}
+
       <NextFABButton
         caption="ادامه"
         icon={PlayArrow}
         onClick={handleGotoNextButton}
       />
-    </Paper>
+    </List>
   );
 }
