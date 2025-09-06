@@ -109,7 +109,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
    */
   useEffect(() => {
     setStoredGames(getStoredGames());
-    loadLastGame();
   }, []);
 
   /**

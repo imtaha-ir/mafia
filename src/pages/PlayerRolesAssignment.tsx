@@ -56,7 +56,7 @@ export default function PlayerRolesAssignments() {
   }, []);
 
   return (
-    <List sx={{ mb: 7 }}>
+    <List sx={{ mb: 8 }}>
       <ListSubheader>
         <ListItemButton
           sx={{
