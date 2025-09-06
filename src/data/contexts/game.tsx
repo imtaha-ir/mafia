@@ -108,17 +108,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
    * Load stored games from localStorage on mount.
    */
   useEffect(() => {
-    const allGames = getStoredGames();
-    setStoredGames(allGames);
-
-    if (allGames.length > 0) {
-      const lastGame = allGames.reduce((lastGameSelected, currentGame) =>
-        currentGame.lastPlay > lastGameSelected.lastPlay
-          ? currentGame
-          : lastGameSelected
-      );
-      setCurrentGame(lastGame);
-    }
+    setStoredGames(getStoredGames());
+    loadLastGame();
   }, []);
 
   /**
