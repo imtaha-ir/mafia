@@ -7,7 +7,10 @@ import { usePlayerContext } from "../../data/contexts/players";
 import { useState } from "react";
 import { useScreen } from "../../data/contexts/screen";
 
-export default function AddPlayerPage() {
+interface AddPlayerPageProps {
+  setOpen: any;
+}
+export default function AddPlayerPage({ setOpen }: AddPlayerPageProps) {
   const playerDB = usePlayerContext();
   const [name, setName] = useState<string>();
   const [yearOfBirth, setYearOfBirth] = useState<number>(1360);
@@ -18,10 +21,12 @@ export default function AddPlayerPage() {
       const addedPlayer = playerDB.add({ name });
       if (addedPlayer) {
         screen.showMessage("ذخیره شد");
+        setOpen(false);
         setName("");
         setYearOfBirth(1360);
       } else {
         screen.showMessage("بازیکن قبلا ثبت شده است");
+        setOpen(false);
       }
     } else {
       screen.showMessage("همه اطلاعات را وارد نمایید", "مافیا");

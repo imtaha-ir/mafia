@@ -1,4 +1,4 @@
-import { Button, Dialog } from "@mui/material";
+import { Box, Dialog } from "@mui/material";
 import AddPlayerPage from "../pages/player-management/AddPayer";
 
 interface AddPlayerDialogProps {
@@ -16,14 +16,9 @@ export default function AddPlayerDialog({
         setOpen(false);
       }}
     >
-      <AddPlayerPage />
-      <Button
-        onClick={() => {
-          setOpen(false);
-        }}
-      >
-        بستن
-      </Button>
+      <Box p={2}>
+        <AddPlayerPage setOpen={setOpen} />
+      </Box>
     </Dialog>
   );
 }
