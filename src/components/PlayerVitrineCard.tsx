@@ -1,4 +1,4 @@
-import { Avatar, Badge, Box, Card, Grid, Icon, Stack, Typography } from "@mui/material";
+import { Avatar, Badge, Icon, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import PlayerVitrinCardDialog from "./PlayerVitrineCardDialog";
@@ -19,38 +19,23 @@ export default function PlayerCard({ name, avatar, role, roleDesc, side, seenCou
     setDisplayCounter(displayCounter + 1);
   };
   return (
-    <>
-      <Box
-        my={1}
+    <ListItem sx={{ my: 1, bgcolor: "background.paper", p: 0 }}>
+      <ListItemButton
         onClick={() => {
           setOpen(true);
         }}
+        sx={{ p: "20px 0px 20px 20px" }}
       >
-        <Card>
-          <Grid
-            container
-            flexGrow={1}
-            sx={{
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Grid>
-              <Stack p={2} direction={"row"} alignItems={"center"} spacing={2}>
-                <Avatar src={avatar} sx={{ width: 60, height: 60 }} />
-                <Typography variant="h6">{name}</Typography>
-              </Stack>
-            </Grid>
-            <Grid>
-              <Stack p={2}>
-                <Badge badgeContent={displayCounter} anchorOrigin={{ horizontal: "left" }}>
-                  <Icon color={displayCounter === 0 ? "disabled" : undefined}>{displayCounter == 0 ? <VisibilityOff /> : <Visibility />}</Icon>
-                </Badge>
-              </Stack>
-            </Grid>
-          </Grid>
-        </Card>
-      </Box>
+        <ListItemAvatar>
+          <Avatar src="" alt="" />
+        </ListItemAvatar>
+        <ListItemText primary={name} />
+        <ListItemIcon>
+          <Badge badgeContent={displayCounter} anchorOrigin={{ horizontal: "left" }}>
+            <Icon color={displayCounter === 0 ? "disabled" : undefined}>{displayCounter == 0 ? <VisibilityOff /> : <Visibility />}</Icon>
+          </Badge>
+        </ListItemIcon>
+      </ListItemButton>
       <PlayerVitrinCardDialog
         avatar={avatar}
         name={name}
@@ -62,6 +47,6 @@ export default function PlayerCard({ name, avatar, role, roleDesc, side, seenCou
         seenCount={seenCount}
         addDisplayCounter={addDisplayCounter}
       />
-    </>
+    </ListItem>
   );
 }
