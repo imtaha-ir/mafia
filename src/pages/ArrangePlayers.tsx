@@ -116,7 +116,10 @@ export default function ArrangePlayers() {
               <ListItemAvatar>
                 <Avatar />
               </ListItemAvatar>
-              <ListItemText primary={player.name} secondary={player.dateOfBirth ? convertNumbers("fa", String(getAge(player.dateOfBirth))) : ""} />
+              <ListItemText
+                primary={player.name}
+                secondary={convertNumbers("fa", getAge(Number(convertNumbers("en", player.dateOfBirth)), "jalali"))}
+              />
             </ListItem>
           );
         })}
