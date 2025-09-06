@@ -52,6 +52,17 @@ export default function PlayerSearchDialog({
     });
     setPlayersToShow([...found]);
   }, [searchQuery]);
+  function handleAddPlayerclose(): void {
+    setAddPlayerOpen(false);
+  }
+
+  function handleAfterSave(player?: Player | undefined): void {
+    if (player) {
+      handlePlayerSelect(player);
+      handleAddPlayerclose();
+    }
+  }
+
   return (
     <Dialog open={open} onClose={() => onExit()}>
       <DialogTitle>
@@ -103,7 +114,11 @@ export default function PlayerSearchDialog({
             </List>
           </Grid>
         </Grid>
-        <AddPlayerDialog open={addPlayerOpen} setOpen={setAddPlayerOpen} />
+        <AddPlayerDialog
+          open={addPlayerOpen}
+          onClose={handleAddPlayerclose}
+          onAfterSave={handleAfterSave}
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={onExit}>بستن</Button>

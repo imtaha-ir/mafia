@@ -1,24 +1,25 @@
-import { Box, Dialog } from "@mui/material";
+import { Box, Dialog, DialogContent } from "@mui/material";
 import AddPlayerPage from "../pages/player-management/AddPayer";
+import type { Player } from "../types/player.type";
 
 interface AddPlayerDialogProps {
   open: boolean;
-  setOpen: any;
+  onClose: () => void;
+  onAfterSave?: (player?: Player) => void;
 }
 export default function AddPlayerDialog({
   open,
-  setOpen,
+  onClose,
+  onAfterSave,
 }: AddPlayerDialogProps) {
+  const handleAfterSave = (p?: Player) => {
+    if (onAfterSave) onAfterSave(p);
+  };
   return (
-    <Dialog
-      open={open}
-      onClose={() => {
-        setOpen(false);
-      }}
-    >
-      <Box p={2}>
-        <AddPlayerPage setOpen={setOpen} />
-      </Box>
+    <Dialog open={open} onClose={onClose}>
+      <DialogContent>
+        <AddPlayerPage onAfterSave={handleAfterSave} />
+      </DialogContent>
     </Dialog>
   );
 }

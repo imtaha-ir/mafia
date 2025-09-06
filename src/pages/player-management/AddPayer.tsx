@@ -6,11 +6,12 @@ import Button from "@mui/material/Button";
 import { usePlayerContext } from "../../data/contexts/players";
 import { useState } from "react";
 import { useScreen } from "../../data/contexts/screen";
+import type { Player } from "../../types/player.type";
 
 interface AddPlayerPageProps {
-  setOpen: any;
+  onAfterSave?: (player?: Player) => void;
 }
-export default function AddPlayerPage({ setOpen }: AddPlayerPageProps) {
+export default function AddPlayerPage({ onAfterSave }: AddPlayerPageProps) {
   const playerDB = usePlayerContext();
   const [name, setName] = useState<string>();
   const [yearOfBirth, setYearOfBirth] = useState<number>(1360);
@@ -20,13 +21,15 @@ export default function AddPlayerPage({ setOpen }: AddPlayerPageProps) {
     if (name) {
       const addedPlayer = playerDB.add({ name });
       if (addedPlayer) {
-        screen.showMessage("ذخیره شد");
-        setOpen(false);
+        if (onAfterSave) {
+          onAfterSave(addedPlayer);
+        } else {
+          screen.showMessage("ذخیره شد");
+        }
         setName("");
         setYearOfBirth(1360);
       } else {
         screen.showMessage("بازیکن قبلا ثبت شده است");
-        setOpen(false);
       }
     } else {
       screen.showMessage("همه اطلاعات را وارد نمایید", "مافیا");
