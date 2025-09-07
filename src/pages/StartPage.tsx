@@ -48,6 +48,14 @@ export default function StartPage() {
             }}
           />
         </Grid>
+          <MenuCard
+          title="تنظیمات "
+          description=" برای بازی بهتر یه سری به تنظیمات بزن "
+          icon={() => <SettingsIcon style={{ width: 100, height: 50 }} />}
+          onClick={() => {
+            navigate(Pages.SettingsPage());
+          }}
+        />
       </Grid>
       <Grid container gap={2} mt={2}>
         <MenuCard
@@ -82,14 +90,7 @@ export default function StartPage() {
             navigate(Pages.FAQPage());
           }}
         />
-         <MenuCard
-          title="تنظیمات "
-          description="قبل از اینکه وارد دنیای بازی بشی برای بازی بهتر یه سری به تنظیمات بزن "
-          icon={() => <SettingsIcon style={{ width: 100, height: 50 }} />}
-          onClick={() => {
-            navigate(Pages.SettingsPage());
-          }}
-        />
+       
       </Grid>
     </Grid>
   );
