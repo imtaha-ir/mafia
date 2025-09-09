@@ -22,6 +22,7 @@ import { Add, Delete, PlayArrow } from "@mui/icons-material";
 import NextFABButton from "../components/NextFABButton";
 import { Pages } from "../Routes";
 import { useNavigate } from "react-router-dom";
+import { convertNumbers, getAge } from "../utils/helper";
 
 export default function ArrangePlayers() {
   const game = useGame();
@@ -95,13 +96,14 @@ export default function ArrangePlayers() {
               label="نام بازی"
               value={gameName}
               onChange={(e) => {
-                setGameName(e.target.value);
+                setGameName(convertNumbers("fa", e.target.value));
               }}
             />
           </Stack>
         </Card>
       </Box>
       <List sx={{ width: "100%" }}>
+
         {arrangedPlayers.map((player, pIndex) => (
           <ListItem
             key={pIndex}
@@ -121,11 +123,12 @@ export default function ArrangePlayers() {
               <Avatar />
             </ListItemAvatar>
             <ListItemText
-              primary={player.name}
-              secondary={player.dateOfBirth}
-            />
+                primary={player.name}
+                secondary={convertNumbers("fa", getAge(Number(convertNumbers("en", player.dateOfBirth)), "jalali"))}
+              />
           </ListItem>
         ))}
+
         <ListItem disablePadding sx={{ mt: 1, bgcolor: "background.paper" }}>
           <ListItemButton
             onClick={() => {

@@ -1,32 +1,37 @@
 import { useGame } from "../data/contexts/game";
 import PlayerVitrineCard from "../components/PlayerVitrineCard";
 import { useEffect, useState } from "react";
-import { Box, Button, Card, CardActions, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useScreen } from "../data/contexts/screen";
+import NextFABButton from "../components/NextFABButton";
+import { List } from "@mui/material";
+import { PlayArrow } from "@mui/icons-material";
+import { Pages } from "../Routes";
 
 export default function RoleVitrine() {
-  const { currentGame } = useGame();
+  const game = useGame();
   const navigate = useNavigate();
   const screen = useScreen();
-  const playersAndRoles = currentGame?.settings.players;
+  const playersAndRoles = game.currentGame?.settings.players;
   const [playerCount, setPlayerCount] = useState<number>(0);
   const [playersSeenCount, setPlayersSeenCount] = useState<number>(0);
   const seenCount = () => {
     setPlayersSeenCount(playersSeenCount + 1);
   };
-  const handleBackButton = () => {
-    navigate(""); // i can't find
-  };
-  const handleNextButton = () => {
-    if (playerCount === 0) {
-      screen.showMessage("بازیکنی یافت نشد!");
-    } else if (playerCount === playersSeenCount) {
-      navigate(""); // i can't find
+  function isEverythingOk() {
+    if (playerCount !== 0 && playerCount === playersSeenCount) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  function goToNextPage() {
+    if (isEverythingOk()) {
+      navigate(Pages.OpeningDay()); // i can't find
     } else {
       screen.showMessage("هنوز همه بازیکن ها نقششون رو ندیدن!");
     }
-  };
+  }
   useEffect(() => {
     if (playersAndRoles) {
       setPlayerCount(playersAndRoles?.length);
@@ -36,42 +41,20 @@ export default function RoleVitrine() {
   }, [playersAndRoles]);
 
   return (
-    <>
+    <List>
       {playersAndRoles?.map((playerItem) => {
         return (
-          <>
-            <PlayerVitrineCard
-              avatar={playerItem.avatar}
-              name={playerItem.name}
-              role={playerItem.role?.name}
-              side={playerItem.role?.side}
-              roleDesc={playerItem.role?.description}
-              seenCount={seenCount}
-            />
-          </>
+          <PlayerVitrineCard
+            avatar={playerItem.avatar}
+            name={playerItem.name}
+            role={playerItem.role?.name}
+            side={playerItem.role?.side}
+            roleDesc={playerItem.role?.description}
+            seenCount={seenCount}
+          />
         );
       })}
-
-      <Box position={"fixed"} bottom={0} right={0} width={"100%"}>
-        <Card>
-          <Grid container sx={{ justifyContent: "space-between" }}>
-            <Grid>
-              <CardActions onClick={handleBackButton}>
-                <Button color="error" variant="outlined">
-                  صفحه قبل
-                </Button>
-              </CardActions>
-            </Grid>
-            <Grid>
-              <CardActions onClick={handleNextButton}>
-                <Button variant="contained" color={playersSeenCount === playerCount && playerCount != 0 ? "success" : "inherit"}>
-                  صفحه بعد
-                </Button>
-              </CardActions>
-            </Grid>
-          </Grid>
-        </Card>
-      </Box>
-    </>
+      <NextFABButton icon={PlayArrow} caption="ادامه" onClick={goToNextPage} />
+    </List>
   );
 }
