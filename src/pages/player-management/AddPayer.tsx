@@ -6,10 +6,16 @@ import Button from "@mui/material/Button";
 import { usePlayerContext } from "../../data/contexts/players";
 import { useState } from "react";
 import { useScreen } from "../../data/contexts/screen";
-import { convertNumbers } from "../../utils/helper";
-// import { convertNumbers } from "../../utils/helper";
 
-export default function AddPlayerPage() {
+import type { Player } from "../../types/player.type";
+import { convertNumbers } from "../../utils/helper";
+
+
+
+interface AddPlayerPageProps {
+  onAfterSave?: (player?: Player) => void;
+}
+export default function AddPlayerPage({ onAfterSave }: AddPlayerPageProps) {
   const playerDB = usePlayerContext();
   const [name, setName] = useState<string>();
   const [yearOfBirth, setYearOfBirth] = useState<string>();
@@ -19,6 +25,13 @@ export default function AddPlayerPage() {
     if (name) {
       const addedPlayer = playerDB.add({ name, dateOfBirth: yearOfBirth });
       if (addedPlayer) {
+
+        if (onAfterSave) {
+          onAfterSave(addedPlayer);
+        } else {
+          screen.showMessage("ذخیره شد");
+        }
+
         setName("");
         setYearOfBirth("");
         screen.showMessage("ذخیره شد");

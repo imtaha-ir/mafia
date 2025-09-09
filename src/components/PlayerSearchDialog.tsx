@@ -19,7 +19,11 @@ import {
 } from "@mui/material";
 import { Clear, Search } from "@mui/icons-material";
 import type { Player } from "../types/player.type";
+
+import AddPlayerDialog from "./AddPlayerDialog";
+
 import { convertNumbers, getAge } from "../utils/helper";
+
 interface MyDialogProps {
   open: boolean;
   onExit: () => void;
@@ -40,7 +44,7 @@ export default function PlayerSearchDialog({ open, onExit, onPlayerSelected }: M
     }
     onExit();
   };
-
+  const [addPlayerOpen, setAddPlayerOpen] = useState<boolean>(false);
   useEffect(() => {
     const found = allPlayers.filter((player) => {
       if (!searchQuery) return true;
@@ -48,6 +52,17 @@ export default function PlayerSearchDialog({ open, onExit, onPlayerSelected }: M
     });
     setPlayersToShow([...found]);
   }, [searchQuery]);
+  function handleAddPlayerclose(): void {
+    setAddPlayerOpen(false);
+  }
+
+  function handleAfterSave(player?: Player | undefined): void {
+    if (player) {
+      handlePlayerSelect(player);
+      handleAddPlayerclose();
+    }
+  }
+
   return (
     <Dialog open={open} onClose={() => onExit()}>
       <DialogTitle>
@@ -92,10 +107,24 @@ export default function PlayerSearchDialog({ open, onExit, onPlayerSelected }: M
             </List>
           </Grid>
         </Grid>
+        <AddPlayerDialog
+          open={addPlayerOpen}
+          onClose={handleAddPlayerclose}
+          onAfterSave={handleAfterSave}
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={onExit}>بستن</Button>
-        <Button disabled={playersToShow.length > 0}>اضافه کردن بازیکن جدید</Button>
+
+        <Button
+          disabled={playersToShow.length > 0}
+          onClick={() => {
+            setAddPlayerOpen(!addPlayerOpen);
+          }}
+        >
+          اضافه کردن بازیکن جدید
+        </Button>
+
       </DialogActions>
     </Dialog>
   );

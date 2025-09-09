@@ -33,7 +33,9 @@ export default function ArrangePlayers() {
   const [gameName, setGameName] = useState<string>("");
 
   function addPlayerToGame(newPlayer: Player): void {
-    const addedPlayer = arrangedPlayers.find((player) => player.id === newPlayer.id);
+    const addedPlayer = arrangedPlayers.find(
+      (player) => player.id === newPlayer.id
+    );
     if (addedPlayer) {
       screen.showMessage("بازیکن قبلا انتخاب شده");
     } else {
@@ -101,28 +103,32 @@ export default function ArrangePlayers() {
         </Card>
       </Box>
       <List sx={{ width: "100%" }}>
-        {arrangedPlayers.map((player, pIndex) => {
-          return (
-            <ListItem
-              key={pIndex}
-              sx={{ mt: 1, bgcolor: "background.paper" }}
-              secondaryAction={
-                <IconButton edge="end" aria-label="delete" onClick={() => removePlayerFromGame(pIndex)}>
-                  <Delete />
-                </IconButton>
-              }
-            >
-              <ListItemIcon>{pIndex + 1}</ListItemIcon>
-              <ListItemAvatar>
-                <Avatar />
-              </ListItemAvatar>
-              <ListItemText
+
+        {arrangedPlayers.map((player, pIndex) => (
+          <ListItem
+            key={pIndex}
+            sx={{ mt: 1, bgcolor: "background.paper" }}
+            secondaryAction={
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                onClick={() => removePlayerFromGame(pIndex)}
+              >
+                <Delete />
+              </IconButton>
+            }
+          >
+            <ListItemIcon>{pIndex + 1}</ListItemIcon>
+            <ListItemAvatar>
+              <Avatar />
+            </ListItemAvatar>
+            <ListItemText
                 primary={player.name}
                 secondary={convertNumbers("fa", getAge(Number(convertNumbers("en", player.dateOfBirth)), "jalali"))}
               />
-            </ListItem>
-          );
-        })}
+          </ListItem>
+        ))}
+
         <ListItem disablePadding sx={{ mt: 1, bgcolor: "background.paper" }}>
           <ListItemButton
             onClick={() => {
@@ -137,7 +143,11 @@ export default function ArrangePlayers() {
           </ListItemButton>
         </ListItem>
       </List>
-      <NextFABButton icon={PlayArrow} caption="ادامه" onClick={saveAndGotoNextPage} />
+      <NextFABButton
+        icon={PlayArrow}
+        caption="ادامه"
+        onClick={saveAndGotoNextPage}
+      />
       <PlayerSearchDialog
         open={dialogOpen}
         onExit={() => {
