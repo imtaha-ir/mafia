@@ -10,14 +10,16 @@ import { useScreen } from "../../data/contexts/screen";
 import type { Player } from "../../types/player.type";
 import { convertNumbers } from "../../utils/helper";
 
-
-
 interface AddPlayerPageProps {
+  initialName?: string;
   onAfterSave?: (player?: Player) => void;
 }
-export default function AddPlayerPage({ onAfterSave }: AddPlayerPageProps) {
+export default function AddPlayerPage({
+  onAfterSave,
+  initialName,
+}: AddPlayerPageProps) {
   const playerDB = usePlayerContext();
-  const [name, setName] = useState<string>();
+  const [name, setName] = useState<string>(initialName ?? "");
   const [yearOfBirth, setYearOfBirth] = useState<string>();
   const screen = useScreen();
 
@@ -25,7 +27,6 @@ export default function AddPlayerPage({ onAfterSave }: AddPlayerPageProps) {
     if (name) {
       const addedPlayer = playerDB.add({ name, dateOfBirth: yearOfBirth });
       if (addedPlayer) {
-
         if (onAfterSave) {
           onAfterSave(addedPlayer);
         } else {

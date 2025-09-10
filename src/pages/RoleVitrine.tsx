@@ -41,7 +41,7 @@ export default function RoleVitrine() {
   }, [playersAndRoles]);
 
   return (
-    <List>
+    <List sx={{ mb: 8 }}>
       {playersAndRoles?.map((playerItem) => {
         return (
           <PlayerVitrineCard

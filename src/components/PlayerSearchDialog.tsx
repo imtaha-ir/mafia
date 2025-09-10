@@ -29,7 +29,11 @@ interface MyDialogProps {
   onExit: () => void;
   onPlayerSelected?: (p: Player) => void;
 }
-export default function PlayerSearchDialog({ open, onExit, onPlayerSelected }: MyDialogProps) {
+export default function PlayerSearchDialog({
+  open,
+  onExit,
+  onPlayerSelected,
+}: MyDialogProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const playerDB = usePlayerContext();
   const allPlayers = playerDB.list;
@@ -67,7 +71,12 @@ export default function PlayerSearchDialog({ open, onExit, onPlayerSelected }: M
     <Dialog open={open} onClose={() => onExit()}>
       <DialogTitle>
         <Card sx={{ p: "2px 4px", display: "flex", alignItems: "center" }}>
-          <InputBase sx={{ ml: 1, flex: 1 }} placeholder="جستجو..." value={searchQuery} onChange={(e) => handlechange(e.target.value)} />
+          <InputBase
+            sx={{ ml: 1, flex: 1 }}
+            placeholder="جستجو..."
+            value={searchQuery}
+            onChange={(e) => handlechange(e.target.value)}
+          />
           {searchQuery != "" ? (
             <IconButton
               type="button"
@@ -91,14 +100,24 @@ export default function PlayerSearchDialog({ open, onExit, onPlayerSelected }: M
             <List sx={{ width: "100%" }}>
               {playersToShow.map((player, pIndex) => {
                 return (
-                  <ListItem key={pIndex} sx={{ mt: 1, bgcolor: "background.paper" }} disablePadding>
+                  <ListItem
+                    key={pIndex}
+                    sx={{ mt: 1, bgcolor: "background.paper" }}
+                    disablePadding
+                  >
                     <ListItemButton onClick={() => handlePlayerSelect(player)}>
                       <ListItemAvatar>
                         <Avatar />
                       </ListItemAvatar>
                       <ListItemText
                         primary={player.name}
-                        secondary={convertNumbers("fa", getAge(Number(convertNumbers("en", player.dateOfBirth)), "jalali"))}
+                        secondary={convertNumbers(
+                          "fa",
+                          getAge(
+                            Number(convertNumbers("en", player.dateOfBirth)),
+                            "jalali"
+                          )
+                        )}
                       />
                     </ListItemButton>
                   </ListItem>
@@ -111,20 +130,19 @@ export default function PlayerSearchDialog({ open, onExit, onPlayerSelected }: M
           open={addPlayerOpen}
           onClose={handleAddPlayerclose}
           onAfterSave={handleAfterSave}
+          initialName={searchQuery}
         />
       </DialogContent>
       <DialogActions>
         <Button onClick={onExit}>بستن</Button>
 
         <Button
-          disabled={playersToShow.length > 0}
           onClick={() => {
             setAddPlayerOpen(!addPlayerOpen);
           }}
         >
           اضافه کردن بازیکن جدید
         </Button>
-
       </DialogActions>
     </Dialog>
   );

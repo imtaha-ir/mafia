@@ -3,11 +3,13 @@ import AddPlayerPage from "../pages/player-management/AddPayer";
 import type { Player } from "../types/player.type";
 
 interface AddPlayerDialogProps {
+  initialName?: string;
   open: boolean;
   onClose: () => void;
   onAfterSave?: (player?: Player) => void;
 }
 export default function AddPlayerDialog({
+  initialName,
   open,
   onClose,
   onAfterSave,
@@ -18,7 +20,10 @@ export default function AddPlayerDialog({
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogContent>
-        <AddPlayerPage onAfterSave={handleAfterSave} />
+        <AddPlayerPage
+          onAfterSave={handleAfterSave}
+          initialName={initialName}
+        />
       </DialogContent>
     </Dialog>
   );
