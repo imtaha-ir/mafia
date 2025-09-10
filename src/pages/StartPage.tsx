@@ -20,6 +20,13 @@ import SettingsIcon from '@mui/icons-material/Settings';
 export default function StartPage() {
   const navigate = useNavigate();
   const game = useGame();
+  const handleLoadGame = () => {
+    if (game.listGames().length) {
+      navigate(Pages.LoadGame());
+    } else {
+      navigate(Pages.ArrangePlayers());
+    }
+  };
 
   return (
     <Grid container p={2} direction="column">
@@ -32,9 +39,7 @@ export default function StartPage() {
             description="بارگذاری بازی‌های ذخیره شده"
             icon={() => <Loop style={{ width: 100, height: 50 }} />}
             title="بازی دوباره"
-            onClick={() => {
-              navigate(Pages.LoadGame());
-            }}
+            onClick={handleLoadGame}
           />
         </Grid>
         <Grid>
