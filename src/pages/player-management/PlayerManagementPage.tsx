@@ -14,29 +14,13 @@ import {
 } from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { useScreen } from "../../data/contexts/screen";
+import { convertNumbers, getAge } from "../../utils/helper";
 
 export default function PlayerManagementPage() {
   const playerDB = usePlayerContext();
   const navigate = useNavigate();
   const [playerList, setPlayerList] = useState<Player[]>([]);
   const screen = useScreen();
-  function calculateAge(dateStr?: string) {
-    if (!dateStr) {
-      return "-";
-    }
-
-    const birthDate = new Date(dateStr);
-    const presentDate = new Date();
-    let age = presentDate.getFullYear() - birthDate.getFullYear();
-    if (
-      presentDate.getMonth() < birthDate.getMonth() ||
-      (presentDate.getMonth() == birthDate.getMonth() &&
-        presentDate.getDay() < birthDate.getDay())
-    ) {
-      age = age - 1;
-    }
-    return age;
-  }
 
   function handleDeletePlayer(id: number) {
     screen.confirm("آیا از حذف این بازیکن مطمئن هستید؟", "مافیا", () => {
@@ -56,7 +40,7 @@ export default function PlayerManagementPage() {
 
   return (
     <Paper>
-      <Grid container spacing={2} mb={2}>
+      <Grid container spacing={2} mb={8}>
         {playerList.map((player) => (
           <Grid size={{ xs: 12, sm: 6, lg: 4, xl: 3 }}>
             <Card>
@@ -64,7 +48,13 @@ export default function PlayerManagementPage() {
                 <Grid container alignItems={"center"}>
                   <Typography flexGrow={1}>{player.name}</Typography>
                   <Typography flexGrow={1}>
-                    {calculateAge(player.dateOfBirth) + " ساله"}
+                    {convertNumbers(
+                      "fa",
+                      getAge(
+                        Number(convertNumbers("en", player.dateOfBirth)),
+                        "jalali"
+                      )
+                    ) + " ساله"}
                   </Typography>
                   <Grid flexGrow={0.3}>
                     <IconButton
