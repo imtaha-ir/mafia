@@ -8,6 +8,7 @@ import {
 import type { Role } from "../types/roles.types";
 import { Delete } from "@mui/icons-material";
 import CharachterImages from "../assets/charachters/charachters";
+import { useScreen } from "../data/contexts/screen";
 
 interface RoleManagementListItemProps {
   role: Role;
@@ -26,11 +27,22 @@ export default function RoleManagementListItem({
   onClick,
   onSelectedCard,
 }: RoleManagementListItemProps) {
+  const screen = useScreen();
   const count = selectedRoles.filter((r) => r.id === role.id).length;
   const disableDelete = count <= role.min;
   const disableAdd = count >= role.max;
   const addRollLimit = count >= role.max || onSelectedCard;
   const selectedPlayerOpacity = disableAdd || !disableDelete;
+  const handlePickRole = () => {
+    if (addRollLimit) {
+      screen.showMessage(
+        "بیشتر از تعداد بازیکنان نمیتوانید نقش انتخاب کنید !",
+        "مافیا"
+      );
+    } else {
+      onClick(role);
+    }
+  };
   return (
     <ListItem
       key={key}
@@ -48,8 +60,7 @@ export default function RoleManagementListItem({
       disablePadding
     >
       <ListItemButton
-        onClick={() => onClick(role)}
-        disabled={addRollLimit}
+        onClick={handlePickRole}
         style={selectedPlayerOpacity ? { opacity: 0.9 } : { opacity: 0.2 }}
       >
         <ListItemAvatar sx={{ mr: 2, ml: -1 }}>
