@@ -13,6 +13,7 @@ import SavedGames from "./pages/SavedGames";
 import ArrangePlayers from "./pages/ArrangePlayers";
 import RoleVitrine from "./pages/RoleVitrine";
 import PlayerRolesAssignments from "./pages/PlayerRolesAssignment";
+import SettingsPage from "./pages/SettingsPage";
 
 export const Pages = {
   StartPage: () => ({ pathname: "/", element: StartPage, title: "مافیا" }),
@@ -85,6 +86,11 @@ export const Pages = {
     pathname: "/game/opening",
     element: () => null,
     title: "Opening Day",
+  }),
+    SettingsPage: () => ({
+    pathname: "/settings-page",
+    element: SettingsPage,
+    title: "تنظیمات بازی",
   }),
 };
 
