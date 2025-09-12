@@ -14,6 +14,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import { ScreenContext } from "./data/contexts/screen";
+import { useGame } from "./data/contexts/game";
+import { Menu } from "@mui/icons-material";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -26,11 +28,19 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [message, setMessage] = useState<string | null>(null);
   const [dialogTitle, setDialogTitle] = useState<string | null>(null);
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
+  const [showBack, setShowBack] = useState<boolean>(false);
+  const [showMenuBtn, setShowMenuBtn] = useState<boolean>(false);
   const [onOk, setOnOk] = useState<() => void>(() => {});
   const [onCancel, setOnCancel] = useState<() => void>();
+  const game = useGame();
 
-  // Show back button if not on root
-  const showBack = location.pathname !== "/";
+  useEffect(() => {
+    // Show back button if not on root
+    let showBackBtn = location.pathname !== "/";
+    showBackBtn &&= game.currentGame?.status !== "GAME_CYCLE";
+    if (showBackBtn != showBack) setShowBack(showBackBtn);
+    setShowMenuBtn(game.currentGame?.status == "GAME_CYCLE");
+  }, [location.pathname, game.currentGame?.status]);
 
   useEffect(() => {
     const r = routes.find((route) => route().pathname == location.pathname);
@@ -38,11 +48,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   }, [location.pathname]);
 
   function handleBack(): void {
-    if (navigate.length) {
-      navigate(-1);
-    } else {
-      navigate({ pathname: "/" });
-    }
+    // Use safeNavigate instead of navigate
+    navigate(-1);
+  }
+  function handleMenuClick() {
+    showMessage("Menu Clicked");
   }
 
   const showMessage = (msg: string, title?: string) => {
@@ -111,6 +121,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 aria-label="back"
               >
                 <ArrowBackIcon />
+              </IconButton>
+            )}
+            {showMenuBtn && (
+              <IconButton
+                edge="start"
+                color="inherit"
+                onClick={() => handleMenuClick()}
+                aria-label="back"
+              >
+                <Menu />
               </IconButton>
             )}
           </Toolbar>

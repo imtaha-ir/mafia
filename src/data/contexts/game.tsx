@@ -17,24 +17,22 @@ type GameSettings = {
 export type GameState = {
   id: number;
   settings: GameSettings;
-  state: {
-    status:
-      | "NEW"
-      | "PLAYERS_OK"
-      | "ROLES_ASSIGNED"
-      | "ROLES_VITRINE"
-      | "GAME_CYCLE"
-      | "FINISHED";
-    gameCycleStep?:
-      | "NIGHT"
-      | "DAY"
-      | "VOTE"
-      | "EXECUTION"
-      | "DISCUSSION"
-      | "BLIND_DAY"
-      | "END"
-      | "";
-  };
+  status?:
+    | "NEW"
+    | "PLAYERS_OK"
+    | "ROLES_ASSIGNED"
+    | "ROLES_VITRINE"
+    | "GAME_CYCLE"
+    | "FINISHED";
+  gameCycleStep?:
+    | "OPPENING_DAY"
+    | "FIRST_NIGHT"
+    | "DAY"
+    | "VOTE"
+    | "DISCUSSION"
+    | "NIGHT"
+    | "NOT_STARTED";
+
   logs: GameLogEntry[];
   lastPlay: number;
 };
@@ -55,6 +53,8 @@ type GameContextType = {
   getGamePlayers: () => GamePlayer[];
   addRoleToCurrentGame: (roles: Role[]) => void;
   assignRandomRolesToPlayers: () => void;
+  isGameCycleStarted: () => boolean;
+  start: () => boolean;
 };
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -124,7 +124,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         players: [],
         roles: [],
       },
-      state: { status: "NEW" }, // Initialize your game state here
+      status: "NEW",
+      gameCycleStep: "NOT_STARTED",
       logs: [],
       lastPlay: Date.now(),
     };
@@ -327,10 +328,20 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     const lastGame = storedGames.reduce((prev, curr) =>
       curr.lastPlay > prev.lastPlay ? curr : prev
     );
+    lastGame.status = "NEW";
     setCurrentGame(lastGame);
     return true;
   };
 
+  const isGameCycleStarted = () => {
+    return currentGame?.gameCycleStep !== "NOT_STARTED";
+  };
+  const start = () => {
+    if (!currentGame) return false;
+    currentGame.lastPlay = Date.now();
+    currentGame.status = "GAME_CYCLE";
+    return true;
+  };
   return (
     <GameContext.Provider
       value={{
@@ -349,6 +360,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         addRoleToCurrentGame,
         assignRandomRolesToPlayers,
         loadLastGame,
+        isGameCycleStarted,
+        start,
       }}
     >
       {children}

@@ -27,6 +27,7 @@ export default function RoleVitrine() {
   }
   function goToNextPage() {
     if (isEverythingOk()) {
+      game.start();
       navigate(Pages.OpeningDay()); // i can't find
     } else {
       screen.showMessage("هنوز همه بازیکن ها نقششون رو ندیدن!");

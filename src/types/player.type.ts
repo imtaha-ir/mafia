@@ -7,6 +7,21 @@ export interface Player {
   avatar?: any;
 }
 
+export type PlayerAbility =
+  | "KILL"
+  | "INVESTIGATE"
+  | "PROTECT"
+  | "BLOCK"
+  | "SILENSE"
+  | "CONVERT"
+  | "SPEAK"
+  | "VOTE";
+
 export interface GamePlayer extends Player {
   role?: Role;
+  alive?: boolean;
+  onStage?: boolean;
+  challengesLeft?: number;
+  abilities: PlayerAbility[];
+  roleSettings: { [key: string]: number };
 }
