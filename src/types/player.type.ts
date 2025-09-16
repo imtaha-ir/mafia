@@ -24,5 +24,5 @@ export interface GamePlayer extends Player {
   challengesLeft?: number;
   dayAbilities: PlayerDayAbility[];
   nightAbilities: PlayerNightAbility[];
-  roleSettings: { [key: string]: number };
+  roleSettings: Record<string, number>;
 }
