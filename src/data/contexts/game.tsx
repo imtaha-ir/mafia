@@ -12,6 +12,10 @@ type GameSettings = {
   name: string;
   players: GamePlayer[];
   roles: Role[];
+  speakTimeout: number;
+  challengeTimeout: number;
+  challengesCount: number;
+  doctorSelfSaveCount: number;
 };
 
 export type GameState = {
@@ -123,6 +127,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         name: new Date().toLocaleString(),
         players: [],
         roles: [],
+        challengesCount: 1,
+        challengeTimeout: 20,
+        doctorSelfSaveCount: 1,
+        speakTimeout: 30,
       },
       status: "NEW",
       gameCycleStep: "NOT_STARTED",
@@ -264,13 +272,13 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
    * Get players of current game.
     @returns {GamePlayer[]} players of current game.
    */
-  const getGamePlayers = () => {
+  const getGamePlayers = (): GamePlayer[] => {
     return currentGame?.settings.players ?? ([] as GamePlayer[]);
   };
 
   /**
    * Add a role to the current game's available roles.
-   * @param {Role} role - The role to add.
+   * @param {Role} roles - The role to add.
    */
   const addRoleToCurrentGame = (roles: Role[]) => {
     if (!currentGame) return;

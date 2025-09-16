@@ -7,21 +7,22 @@ export interface Player {
   avatar?: any;
 }
 
-export type PlayerAbility =
+export type PlayerDayAbility = "KILL" | "SPEAK" | "VOTE";
+
+export type PlayerNightAbility =
   | "KILL"
   | "INVESTIGATE"
   | "PROTECT"
   | "BLOCK"
   | "SILENSE"
-  | "CONVERT"
-  | "SPEAK"
-  | "VOTE";
+  | "CONVERT";
 
 export interface GamePlayer extends Player {
   role?: Role;
   alive?: boolean;
   onStage?: boolean;
   challengesLeft?: number;
-  abilities: PlayerAbility[];
+  dayAbilities: PlayerDayAbility[];
+  nightAbilities: PlayerNightAbility[];
   roleSettings: { [key: string]: number };
 }
