@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  Card,
   IconButton,
   Stack,
   TextField,
@@ -51,7 +52,7 @@ export default function VotingPage() {
     <Box mt={"15%"}>
       <Stack alignItems={"center"} p={5} gap={3}>
         <Avatar
-          sx={{ width: 150, height: 150 }}
+          sx={{ width: 200, height: 200 }}
           src={playersList[currentIndex]?.avatar}
         />
         <Stack>
@@ -59,41 +60,36 @@ export default function VotingPage() {
             {playersList[currentIndex]?.name ?? "نام بازیکن"}
           </Typography>
         </Stack>
-        <Stack
-          gap={2}
-          border={1}
-          p={3}
-          justifyContent={"center"}
-          alignItems={"center"}
-        >
-          <Typography variant="body1">تعداد رای</Typography>
-          <Stack flexDirection={"row"}>
-            <IconButton
-              onClick={() => {
-                votes[currentIndex] = votes[currentIndex] + 1;
-              }}
-            >
-              <AddIcon />
-            </IconButton>
-            <TextField
-              sx={{ width: 30 }}
-              variant="standard"
-              value={votes[currentIndex] ?? 0}
-              onChange={(e) => {
-                votes[currentIndex] = Number(e.target.value);
-              }}
-            />
-            <IconButton
-              onClick={() => {
-                votes[currentIndex] = votes[currentIndex] - 1;
-              }}
-            >
-              <RemoveIcon />
-            </IconButton>
+        <Card>
+          <Stack gap={2} p={3} justifyContent={"center"} alignItems={"center"}>
+            <Typography variant="body1">تعداد رای</Typography>
+            <Stack flexDirection={"row"}>
+              <IconButton
+                onClick={() => {
+                  votes[currentIndex] = votes[currentIndex] + 1;
+                }}
+              >
+                <AddIcon />
+              </IconButton>
+              <TextField
+                sx={{ width: 30 }}
+                variant="standard"
+                value={votes[currentIndex] ?? 0}
+                onChange={(e) => {
+                  votes[currentIndex] = Number(e.target.value);
+                }}
+              />
+              <IconButton
+                onClick={() => {
+                  votes[currentIndex] = votes[currentIndex] - 1;
+                }}
+              >
+                <RemoveIcon />
+              </IconButton>
+            </Stack>
           </Stack>
-        </Stack>
+        </Card>
       </Stack>
-
       <IconButton
         disabled={currentIndex == playersCount}
         onClick={() => {
