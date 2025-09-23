@@ -24,7 +24,7 @@ export default function VotingPage() {
   const [playersList, setPlayersList] = useState<GamePlayer[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [playersCount, setPlayersCount] = useState<number>();
-  const votes: Record<number, number> = {};
+  const [votes, setVotes] = useState<Record<number, number>>({});
 
   function handleFinish() {
     screen.showMessage("تغییرات ثبت شد.");
@@ -34,19 +34,25 @@ export default function VotingPage() {
   useEffect(() => {
     if (game) {
       const alivePlayers = game.currentGame?.settings.players.filter(
-        (pL) => pL.alive
+        (pL) => pL.alive ?? true
       );
       if (alivePlayers) {
         setPlayersList(alivePlayers);
         setPlayersCount(alivePlayers?.length);
-        alivePlayers.forEach((player) => {
-          votes[player.id] = 0;
+        alivePlayers.forEach((player, pIndex) => {
+          votes[pIndex] = 0;
         });
       }
     } else {
       screen.showMessage("بازیکنی یافت نشد!");
     }
-  }, []);
+  }, [game]);
+
+  function handleVoteChange(value: number) {
+    if (value < 0) return;
+    if (value > playersList.length - 1) return;
+    setVotes({ ...votes, [currentIndex]: value });
+  }
 
   return (
     <Box mt={"15%"}>
@@ -66,7 +72,7 @@ export default function VotingPage() {
             <Stack flexDirection={"row"}>
               <IconButton
                 onClick={() => {
-                  votes[currentIndex] = votes[currentIndex] + 1;
+                  handleVoteChange(votes[currentIndex] + 1);
                 }}
               >
                 <AddIcon />
@@ -76,12 +82,12 @@ export default function VotingPage() {
                 variant="standard"
                 value={votes[currentIndex] ?? 0}
                 onChange={(e) => {
-                  votes[currentIndex] = Number(e.target.value);
+                  handleVoteChange(Number(e.target.value));
                 }}
               />
               <IconButton
                 onClick={() => {
-                  votes[currentIndex] = votes[currentIndex] - 1;
+                  handleVoteChange(votes[currentIndex] - 1);
                 }}
               >
                 <RemoveIcon />
