@@ -20,16 +20,17 @@ import { useEffect, useState } from "react";
 
 interface GamePlayerListItemProps {
   player: Player;
-  isActiveSpeaker: boolean;
-  challengeAllowed: boolean;
-  isMuted: boolean;
-  onChallengeRequest: (id: number) => void;
-  onStartSpeaking: (id: number) => void;
-  onPause: (id: number) => void;
-  onFinishSpeaking: (id: number) => void;
-  onPlayerClick: (id: number) => void;
-  onReset: (id: number) => void;
-  progressTime: number;
+  isActiveSpeaker?: boolean;
+  challengeAllowed?: boolean;
+  isMuted?: boolean;
+  onChallengeRequest?: (id: number) => void;
+  onStartSpeaking?: (id: number) => void;
+  onPause?: (id: number) => void;
+  onFinishSpeaking?: (id: number) => void;
+  onPlayerClick?: (id: number) => void;
+  onReset?: (id: number) => void;
+  speakTime: number;
+  challengeTime: number;
 }
 
 export default function GamePlayerListItem({
@@ -43,9 +44,9 @@ export default function GamePlayerListItem({
   onFinishSpeaking,
   onPlayerClick,
   onReset,
-  progressTime,
+  speakTime,
 }: GamePlayerListItemProps) {
-  const [time, setTime] = useState(progressTime);
+  const [time, setTime] = useState(speakTime);
   const [isPlaying, setIsPlaying] = useState(isActiveSpeaker);
 
   useEffect(() => {
@@ -66,86 +67,37 @@ export default function GamePlayerListItem({
   useEffect(() => {
     setIsPlaying(isActiveSpeaker);
     if (isActiveSpeaker) {
-      setTime(progressTime);
+      setTime(speakTime);
     }
   }, [isActiveSpeaker]);
 
   const handlePauseIconButton = () => {
     setIsPlaying(false);
-    onPause(player.id);
+    onPause && onPause(player.id);
   };
   const handleResetIconButton = () => {
-    onReset(player.id);
-    setTime(progressTime);
+    onReset && onReset(player.id);
+    setTime(speakTime);
     setIsPlaying(false);
   };
   const handlePlayIconButton = () => {
     setIsPlaying(true);
-    onStartSpeaking(player.id);
+    onStartSpeaking && onStartSpeaking(player.id);
   };
 
   return (
     <ListItem
       key={player.id}
       onClick={() => {
-        onPlayerClick(player.id);
+        onPlayerClick && onPlayerClick(player.id);
       }}
       sx={{
-        mt: 1,
         bgcolor: "background.paper",
-        borderRadius: 2,
-        minHeight: 70,
+        p: 2,
       }}
       secondaryAction={
-        <Box display="flex" alignItems="center">
-          <ListItemText>{player.name}</ListItemText>
-          <ListItemIcon>
-            {isActiveSpeaker ? (
-              <Box
-                position="relative"
-                display="inline-flex"
-                style={{ marginRight: "20%" }}
-              >
-                <CircularProgress
-                  thickness={4}
-                  value={(time / progressTime) * 100}
-                  variant="determinate"
-                />
-                <Box
-                  top={0}
-                  left={0}
-                  bottom={0}
-                  right={0}
-                  position="absolute"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  {time > 0 && (
-                    <Typography variant="caption">{time}</Typography>
-                  )}
-                </Box>
-              </Box>
-            ) : (
-              isMuted && <VolumeOff style={{ marginRight: "40%" }} />
-            )}
-          </ListItemIcon>
-        </Box>
-      }
-    >
-      <ListItemIcon>
-        {isActiveSpeaker ? (
+        isActiveSpeaker ? (
           <Box>
-            <IconButton
-              onClick={() => {
-                onFinishSpeaking(player.id);
-              }}
-            >
-              <Done />
-            </IconButton>
-            <IconButton onClick={handleResetIconButton}>
-              <RestartAlt />
-            </IconButton>
             {isPlaying ? (
               <IconButton onClick={handlePauseIconButton}>
                 <Pause />
@@ -157,20 +109,58 @@ export default function GamePlayerListItem({
                 </IconButton>
               )
             )}
+
+            <IconButton onClick={handleResetIconButton}>
+              <RestartAlt />
+            </IconButton>
+            <IconButton
+              onClick={() => {
+                onFinishSpeaking && onFinishSpeaking(player.id);
+              }}
+            >
+              <Done />
+            </IconButton>
           </Box>
         ) : (
           challengeAllowed &&
           !isActiveSpeaker && (
             <IconButton
               onClick={() => {
-                onChallengeRequest(player.id);
+                onChallengeRequest && onChallengeRequest(player.id);
               }}
             >
               <TourSharp />
             </IconButton>
           )
+        )
+      }
+    >
+      <ListItemIcon>
+        {isActiveSpeaker ? (
+          <Box position="relative" display="inline-flex">
+            <CircularProgress
+              thickness={4}
+              value={(time / speakTime) * 100}
+              variant="determinate"
+            />
+            <Box
+              top={0}
+              left={0}
+              bottom={0}
+              right={0}
+              position="absolute"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+            >
+              {time > 0 && <Typography variant="caption">{time}</Typography>}
+            </Box>
+          </Box>
+        ) : (
+          isMuted && <VolumeOff />
         )}
       </ListItemIcon>
+      <ListItemText>{player.name}</ListItemText>
     </ListItem>
   );
 }
