@@ -1,4 +1,10 @@
 export type RoleSide = "MAFIA" | "TOWN";
+export interface RoleSetting {
+  caption: string;
+  min: number;
+  max: number;
+  default: number;
+}
 export interface Role {
   id: number;
   charachterIndex?: number;
@@ -8,4 +14,5 @@ export interface Role {
   max: number;
   description: string;
   longDescription?: string;
+  settings?: Record<string, RoleSetting>;
 }
