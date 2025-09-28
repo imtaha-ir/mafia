@@ -1,7 +1,6 @@
 import AddPlayerPage from "./pages/player-management/AddPayer";
 import EditPlayerPage from "./pages/player-management/EditPlayer";
 import PlayerManagementPage from "./pages/player-management/PlayerManagementPage";
-import PlayerSearchComponent from "./components/PlayerSearchDialog";
 import StartPage from "./pages/StartPage";
 import FAQPage from "./pages/static/FAQ";
 import HowToPlayPage from "./pages/static/HowToPlay";
@@ -14,6 +13,7 @@ import ArrangePlayers from "./pages/ArrangePlayers";
 import RoleVitrine from "./pages/RoleVitrine";
 import PlayerRolesAssignments from "./pages/PlayerRolesAssignment";
 import SettingsPage from "./pages/SettingsPage";
+import GameOptionsPage from "./pages/GameOptionsPage";
 
 export const Pages = {
   StartPage: () => ({ pathname: "/", element: StartPage, title: "مافیا" }),
@@ -40,17 +40,17 @@ export const Pages = {
   PlayerManagementPage: () => ({
     pathname: "/player-management",
     element: PlayerManagementPage,
-    title: "Player Management",
+    title: "بانک بازیکنان",
   }),
   PlayerAddPage: () => ({
     pathname: "/player-management/add",
     element: AddPlayerPage,
-    title: "New Player",
+    title: "بازیکن جدید",
   }),
   PlayerEditPage: (id?: number) => ({
     pathname: `/player-management/edit/${id ?? ":id"}`,
     element: EditPlayerPage,
-    title: "Edit Player",
+    title: "ویرایش بازیکن",
   }),
   PlayerSearchPage: () => ({
     pathname: "/test",
@@ -60,34 +60,39 @@ export const Pages = {
   LoadGame: () => ({
     pathname: "/load-game",
     element: SavedGames,
-    title: "Load Game",
+    title: "بازی دوباره",
   }),
   ArrangePlayers: () => ({
     pathname: "/arrange-players",
     element: ArrangePlayers,
-    title: "Arrange Players",
+    title: "چیدمان بازیکنان",
   }),
   ArrangeRoles: () => ({
     pathname: "/arrange-roles",
     element: RolesManagement,
-    title: "Arrange Roles",
+    title: "نقش‌های بازی",
   }),
   PlayerRolesAssignments: () => ({
     pathname: "/player-roles-assignment",
     element: PlayerRolesAssignments,
-    title: "Arrange Roles",
+    title: "تعیین نقش",
+  }),
+  GameOptions: () => ({
+    pathname: "/game-options",
+    element: GameOptionsPage,
+    title: "گزینه‌های بازی",
   }),
   RolesVitrine: () => ({
     pathname: "/roles-vitrine",
     element: RoleVitrine,
-    title: "Roles Vitrine",
+    title: "ویترین نقش‌ها",
   }),
   OpeningDay: () => ({
     pathname: "/game/opening",
     element: () => null,
-    title: "Opening Day",
+    title: "روز نخست",
   }),
-    SettingsPage: () => ({
+  SettingsPage: () => ({
     pathname: "/settings-page",
     element: SettingsPage,
     title: "تنظیمات بازی",
