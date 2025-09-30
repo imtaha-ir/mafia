@@ -31,14 +31,22 @@ export default function RoleManagementListItem({
   const count = selectedRoles.filter((r) => r.id === role.id).length;
   const disableDelete = count <= role.min;
   const disableAdd = count >= role.max;
-  const addRollLimit = count >= role.max || onSelectedCard;
+  const addRollLimit = count == role.max || onSelectedCard;
   const selectedPlayerOpacity = disableAdd || !disableDelete;
+  const addSpecialLimit = count >= role.max;
+
   const handlePickRole = () => {
     if (addRollLimit) {
       screen.showMessage(
         "بیشتر از تعداد بازیکنان نمیتوانید نقش انتخاب کنید !",
         "مافیا"
       );
+      if (addSpecialLimit) {
+        screen.showMessage(
+          "این کارت را فقط یک بار میتوانید اضافه کنید !",
+          "مافیا"
+        );
+      }
     } else {
       onClick(role);
     }
