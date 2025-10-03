@@ -30,6 +30,7 @@ export default function ArrangePlayers() {
   const navigate = useNavigate();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [arrangedPlayers, setArrangedPlayer] = useState<Player[]>([]);
+  const [availablePlayers, setAvailablePlayers] = useState<Player[]>([]);
   const [gameName, setGameName] = useState<string>("");
 
   function addPlayerToGame(newPlayer: Player): void {
@@ -40,13 +41,21 @@ export default function ArrangePlayers() {
       screen.showMessage("بازیکن قبلا انتخاب شده");
     } else {
       setArrangedPlayer([...arrangedPlayers, newPlayer]);
+      setAvailablePlayers((players) =>
+        players.some((p) => p.id === newPlayer.id)
+          ? players
+          : [...players, newPlayer]
+      );
     }
   }
 
   function removePlayerFromGame(playerIndex: number): void {
     const newList = [...arrangedPlayers];
-    newList.splice(playerIndex, 1);
+    const [removedPlayer] = newList.splice(playerIndex, 1);
     setArrangedPlayer(newList);
+    setAvailablePlayers((players) =>
+      players.filter((p) => p.id !== removedPlayer.id)
+    );
   }
 
   function getDateAndTime() {
@@ -81,6 +90,7 @@ export default function ArrangePlayers() {
     if (game.currentGame) {
       setGameName(game.currentGame.settings.name);
       setArrangedPlayer(game.currentGame.settings.players);
+      setAvailablePlayers(game.currentGame.settings.players);
     } else {
       setGameName(getDateAndTime());
     }
@@ -103,7 +113,6 @@ export default function ArrangePlayers() {
         </Card>
       </Box>
       <List sx={{ width: "100%" }}>
-
         {arrangedPlayers.map((player, pIndex) => (
           <ListItem
             key={pIndex}
@@ -123,9 +132,15 @@ export default function ArrangePlayers() {
               <Avatar />
             </ListItemAvatar>
             <ListItemText
-                primary={player.name}
-                secondary={convertNumbers("fa", getAge(Number(convertNumbers("en", player.dateOfBirth)), "jalali"))}
-              />
+              primary={player.name}
+              secondary={convertNumbers(
+                "fa",
+                getAge(
+                  Number(convertNumbers("en", player.dateOfBirth)),
+                  "jalali"
+                )
+              )}
+            />
           </ListItem>
         ))}
 
@@ -154,6 +169,7 @@ export default function ArrangePlayers() {
           setDialogOpen(false);
         }}
         onPlayerSelected={addPlayerToGame}
+        availablePlayers={availablePlayers}
       />
     </>
   );

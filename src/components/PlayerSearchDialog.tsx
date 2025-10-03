@@ -28,25 +28,28 @@ interface MyDialogProps {
   open: boolean;
   onExit: () => void;
   onPlayerSelected?: (p: Player) => void;
+  availablePlayers: Player[];
 }
 export default function PlayerSearchDialog({
   open,
   onExit,
   onPlayerSelected,
+  availablePlayers,
 }: MyDialogProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const playerDB = usePlayerContext();
   const allPlayers = playerDB.list;
   const [playersToShow, setPlayersToShow] = useState<Player[]>(allPlayers);
-
   const handlechange = (value: any) => {
     setSearchQuery(value);
   };
   const handlePlayerSelect = (p: Player) => {
     if (onPlayerSelected) {
       onPlayerSelected(p);
+      setPlayersToShow((selectedPlayer) =>
+        selectedPlayer.filter((player) => player.id !== p.id)
+      );
     }
-    onExit();
   };
   const [addPlayerOpen, setAddPlayerOpen] = useState<boolean>(false);
   useEffect(() => {
@@ -54,8 +57,13 @@ export default function PlayerSearchDialog({
       if (!searchQuery) return true;
       return player.name.includes(searchQuery);
     });
-    setPlayersToShow([...found]);
-  }, [searchQuery]);
+    if (availablePlayers) {
+      const filtered = found.filter(
+        (players) => !availablePlayers.some((p) => p.id === players.id)
+      );
+      setPlayersToShow(filtered);
+    }
+  }, [searchQuery, availablePlayers, allPlayers]);
   function handleAddPlayerclose(): void {
     setAddPlayerOpen(false);
   }
