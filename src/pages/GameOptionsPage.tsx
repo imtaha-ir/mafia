@@ -5,11 +5,13 @@ import { type RoleSetting } from "../types/roles.types";
 
 interface OptionsInfo {
   title: string;
+  id: number;
   settings: (RoleSetting & { name: string })[];
 }
 
 const generalOptions: OptionsInfo = {
   title: "عمومی",
+  id: 0,
   settings: [
     {
       name: "challengesCount",
@@ -60,11 +62,13 @@ export default function GameOptionsPage() {
           });
           gameOptionsInfo.push({
             title: player.role.name,
+            id: player.role.id,
             settings: roleSettings,
           });
         }
       });
       // setGameOptions()
+      gameOptionsInfo.sort((a, b) => a.id - b.id);
       setAllSettingInfo(gameOptionsInfo);
     }
   }, [game]);
