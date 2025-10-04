@@ -38,6 +38,9 @@ export default function SavedGames() {
       }
     );
   };
+  const handleDeleteAllGames = () => {
+    game.deleteAllGames();
+  };
   const handleClick = (g: GameState) => {
     screen.confirm(
       `بازی ${g.settings.name} بارگذاری شود؟`,
@@ -53,6 +56,11 @@ export default function SavedGames() {
     <Typography>هنوز هیچ بازی‌ای ذخیره نشده.</Typography>
   ) : (
     <List>
+      <Box>
+        <Button onClick={handleDeleteAllGames} variant="outlined">
+          <Typography variant="button">پاک کردن همه بازی ها</Typography>
+        </Button>
+      </Box>
       {gameList.map((savedGame, gIndex) => (
         <ListItem
           disablePadding

@@ -49,6 +49,7 @@ type GameContextType = {
   loadLastGame: () => boolean;
   saveCurrentGame: () => void;
   deleteGame: (id: number) => void;
+  deleteAllGames: () => void;
   addLog: (message: string) => void;
   listGames: () => GameState[];
   assignRoleToPlayer: (playerId: number, role: Role) => void;
@@ -175,6 +176,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     setStoredGames(updatedGames);
     saveGamesToStorage(updatedGames);
     if (currentGame?.id === id) setCurrentGame(null);
+  };
+
+  const deleteAllGames = () => {
+    setStoredGames([]);
   };
 
   /**
@@ -359,6 +364,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         loadGame,
         saveCurrentGame,
         deleteGame,
+        deleteAllGames,
         addLog,
         listGames,
         assignRoleToPlayer,
