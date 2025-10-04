@@ -39,7 +39,7 @@ export default function PlayerSearchDialog({
   const [searchQuery, setSearchQuery] = useState("");
   const playerDB = usePlayerContext();
   const allPlayers = playerDB.list;
-  const [playersToShow, setPlayersToShow] = useState<Player[]>(allPlayers);
+  const [playersToShow, setPlayersToShow] = useState<Player[]>([]);
   const handlechange = (value: any) => {
     setSearchQuery(value);
   };
@@ -57,13 +57,22 @@ export default function PlayerSearchDialog({
       if (!searchQuery) return true;
       return player.name.includes(searchQuery);
     });
+
+    let filtered = found;
     if (availablePlayers) {
-      const filtered = found.filter(
-        (players) => !availablePlayers.some((p) => p.id === players.id)
+      filtered = found.filter(
+        (player) => !availablePlayers.some((p) => p.id === player.id)
       );
-      setPlayersToShow(filtered);
     }
+
+    setPlayersToShow((currentList) => {
+      const same =
+        currentList.length === filtered.length &&
+        currentList.every((p, i) => p.id === filtered[i].id);
+      return same ? currentList : filtered;
+    });
   }, [searchQuery, availablePlayers, allPlayers]);
+
   function handleAddPlayerclose(): void {
     setAddPlayerOpen(false);
   }
